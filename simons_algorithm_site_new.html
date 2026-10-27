@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simon's Algorithm and Quantum Speedups</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 820px; margin: 45px auto; padding: 0 20px; line-height: 1.6; color: #222; }
+    h1 { margin-bottom: 4px; }
+    .subtitle { color: #666; margin-top: 0; }
+    nav { margin: 24px 0; }
+    nav ol { padding-left: 22px; }
+    nav li { margin: 6px 0; }
+    a { color: #1757a6; }
+    details { border-top: 1px solid #ddd; padding: 14px 0; }
+    details:last-of-type { border-bottom: 1px solid #ddd; }
+    summary { cursor: pointer; font-weight: bold; }
+    details p { margin: 12px 0 0; }
+    footer { margin-top: 32px; font-size: 14px; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>Simon's Algorithm and Quantum Speedups</h1>
+  <p class="subtitle">15-455 Complexity Theory Project</p>
+  <p>This website will introduce the basics of quantum computation and explore how Simon's algorithm achieves an exponential quantum query speedup over classical randomized algorithms.</p>
+
+  <h2>Outline</h2>
+  <nav aria-label="Project outline"><ol>
+    <li><a href="#intro">Introduction to Quantum Computation</a> — Motivation for quantum speedups and query complexity.</li>
+    <li><a href="#basics">Quantum Computing Basics</a> — Qubits, superposition, measurement, and gates.</li>
+    <li><a href="#oracles">Quantum Circuits and Oracles</a> — Circuit model and oracle queries.</li>
+    <li><a href="#problem">Simon's Problem</a> — The hidden-string problem and its promise.</li>
+    <li><a href="#algorithm">Simon's Algorithm</a> — The quantum procedure and linear equations.</li>
+    <li><a href="#proof">Quantum Correctness Proof</a> — Why the algorithm works with O(n) queries.</li>
+    <li><a href="#lower-bound">Classical Randomized Lower Bound</a> — Collision probability and the exponential separation.</li>
+    <li><a href="#implications">Implications and Limitations</a> — What the speedup does and does not show.</li>
+  </ol></nav>
+
+  <h2>Sections</h2>
+  <details id="intro"><summary>1. Introduction to Quantum Computation</summary><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae neque at augue placerat egestas. Duis commodo orci vitae nisi commodo, vitae auctor nulla aliquam.</p></details>
+  <details id="basics"><summary>2. Quantum Computing Basics</summary><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae neque at augue placerat egestas. Duis commodo orci vitae nisi commodo, vitae auctor nulla aliquam.</p></details>
+  <details id="oracles"><summary>3. Quantum Circuits and Oracles</summary><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae neque at augue placerat egestas. Duis commodo orci vitae nisi commodo, vitae auctor nulla aliquam.</p></details>
+  <details id="problem"><summary>4. Simon's Problem</summary><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae neque at augue placerat egestas. Duis commodo orci vitae nisi commodo, vitae auctor nulla aliquam.</p></details>
+  <details id="algorithm"><summary>5. Simon's Algorithm</summary><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae neque at augue placerat egestas. Duis commodo orci vitae nisi commodo, vitae auctor nulla aliquam.</p></details>
+  <details id="proof"><summary>6. Quantum Correctness Proof</summary><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae neque at augue placerat egestas. Duis commodo orci vitae nisi commodo, vitae auctor nulla aliquam.</p></details>
+  <details id="lower-bound"><summary>7. Classical Randomized Lower Bound</summary><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae neque at augue placerat egestas. Duis commodo orci vitae nisi commodo, vitae auctor nulla aliquam.</p></details>
+  <details id="implications"><summary>8. Implications and Limitations</summary><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae neque at augue placerat egestas. Duis commodo orci vitae nisi commodo, vitae auctor nulla aliquam.</p></details>
+  <footer>References to explore: MIT Quantum Complexity Theory lecture notes; IBM Quantum's Simon's algorithm tutorial.</footer>
+  <script>
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        const section = document.querySelector(link.getAttribute('href'));
+        if (section) section.open = true;
+      });
+    });
+  </script>
+</body>
+</html>
