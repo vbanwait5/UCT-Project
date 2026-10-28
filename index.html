@@ -21,7 +21,7 @@
 </head>
 <body>
   <h1>Simon's Algorithm and Quantum Speedups</h1>
-  <p class="subtitle">15-455 Complexity Theory Project</p>
+  <p class="subtitle">15-455 UCT Project</p>
   <p>This website will introduce the basics of quantum computation and explore how Simon's algorithm achieves an exponential quantum query speedup over classical randomized algorithms.</p>
 
   <h2>Outline</h2>
@@ -37,15 +37,15 @@
   </ol></nav>
 
   <h2>Sections</h2>
-  <details id="intro"><summary>1. Introduction to Quantum Computation</summary><p>I will introduce quantum computation and explain why it offers a different approach to solving certain problems. I will also motivate the study of quantum speedups by defining query complexity and comparing quantum and classical models.</p></details>
-  <details id="basics"><summary>2. Quantum Computing Basics</summary><p>I will review the core ideas needed to understand quantum algorithms, including qubits, superposition, interference, and measurement. I will also explain how common quantum gates transform states and how multiple qubits are represented together.</p></details>
-  <details id="oracles"><summary>3. Quantum Circuits and Oracles</summary><p>I will describe the quantum circuit model and show how a sequence of gates carries out a computation. I will then explain quantum oracles, how they encode black-box functions, and how oracle calls are counted when analyzing query complexity.</p></details>
+  <details id="intro"><summary>1. Introduction to Quantum Computation</summary><p>I will introduce quantum computation and explain why it gives a different approach to solving certain problems. I will also motivate the study of quantum speedups by defining query complexity and comparing quantum and classical models.</p></details>
+  <details id="basics"><summary>2. Quantum Computing Basics</summary><p>I will review the core ideas needed to understand quantum algorithms, including qubits, superposition, interference, and measurement (lot of definitions). I will also explain how common quantum gates transform states and how multiple qubits are represented together.</p></details>
+  <details id="oracles"><summary>3. Quantum Circuits and Oracles</summary><p>I will describe the quantum circuit model and show how a sequence of gates carries out a computation. I will then explain quantum oracles and how oracle calls are counted when analyzing query complexity.</p></details>
   <details id="problem"><summary>4. Simon's Problem</summary><p>I will formally define Simon's problem, including the promise that a function hides a nonzero bit string through a two-to-one mapping. I will illustrate the goal of recovering that hidden string and explain why the promise is essential to the problem.</p></details>
   <details id="algorithm"><summary>5. Simon's Algorithm</summary><p>I will walk through Simon's quantum algorithm step by step, from preparing a superposition to querying the oracle and measuring the registers. I will show how repeated runs produce linear equations that can be solved to recover the hidden string.</p></details>
   <details id="proof"><summary>6. Quantum Correctness Proof</summary><p>I will prove that each measurement produces a uniformly random bit string orthogonal to the hidden string. I will then show that enough independent equations are obtained with high probability, allowing the algorithm to succeed using only O(n) oracle queries.</p></details>
   <details id="lower-bound"><summary>7. Classical Randomized Lower Bound</summary><p>I will analyze why a classical randomized algorithm must find a collision among the oracle's outputs to learn the hidden string. Using the birthday-paradox argument, I will derive the exponential query lower bound and compare it with the quantum algorithm's linear query complexity.</p></details>
   <details id="implications"><summary>8. Implications and Limitations</summary><p>I will discuss what Simon's algorithm demonstrates about exponential quantum speedups and its influence on later algorithms such as Shor's. I will also clarify the result's limitations, including its reliance on a promise problem, an ideal oracle, and query complexity rather than total real-world runtime.</p></details>
-  <footer>References to explore: MIT Quantum Complexity Theory lecture notes; IBM Quantum's Simon's algorithm tutorial.</footer>
+  <footer>References: MIT Quantum Complexity Theory lecture notes; IBM Quantum's Simon's algorithm tutorial.</footer>
   <script>
     document.querySelectorAll('nav a').forEach(link => {
       link.addEventListener('click', () => {
