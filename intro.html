@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Introduction to quantum computation, query complexity, and quantum speedups.">
+  <title>01 · Introduction to Quantum Computation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Quantum Speedups home">
+      <span class="brand-mark" aria-hidden="true">|ψ⟩</span>
+      <span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Overview</a>
+      <a class="active" href="intro.html" aria-current="page">01 · Introduction</a>
+      <a href="basics.html">02 · Basics</a>
+    </nav>
+  </header>
+
+  <main class="reading-shell">
+    <aside class="toc" aria-label="On this page">
+      <p class="toc-label">Reading progress</p>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
+      <p class="toc-label">On this page</p>
+      <ol>
+        <li><a href="#why-quantum">Why quantum?</a></li>
+        <li><a href="#computation-model">A model of computation</a></li>
+        <li><a href="#queries">Query complexity</a></li>
+        <li><a href="#speedup">What “speedup” means</a></li>
+        <li><a href="#simon-preview">The road to Simon</a></li>
+      </ol>
+    </aside>
+
+    <article class="lesson-content">
+      <header class="chapter-header">
+        <p class="chapter-kicker">Chapter 01</p>
+        <h1>Introduction to<br>Quantum Computation</h1>
+        <p class="chapter-summary">Quantum computation changes the mathematical model used to represent and transform information. Our goal is to define that model precisely enough to compare classical and quantum query complexity.</p>
+        <div class="chapter-meta"><span>Formal foundation</span><span>18–22 minute read</span><span>Assumes discrete mathematics</span></div>
+      </header>
+
+      <section id="why-quantum">
+        <h2>1. Why study a quantum model?</h2>
+        <p>A classical computer stores information in bits and updates those bits through classical logical operations. A quantum computer stores information in <em>quantum states</em> and transforms those states according to the laws of quantum mechanics. This is not merely a faster implementation of the same model: the allowed states and operations are different.</p>
+        <p>Different does not mean automatically better. Quantum computers cannot efficiently solve every computational problem, and they do not let us read every branch of a superposition. Their advantage appears only when an algorithm uses <em>interference</em> to amplify useful global structure and suppress unhelpful outcomes.</p>
+
+        <div class="note-box question">
+          <p class="note-title">Guiding Question</p>
+          <p>Can a quantum algorithm solve a problem using substantially fewer accesses to its input than any classical algorithm?</p>
+        </div>
+
+        <p>Simon’s problem gives one of the cleanest “yes” answers. Its quantum solution uses a number of queries linear in the input length, while a classical randomized algorithm requires exponentially many queries to obtain comparable success probability. Before seeing that separation, we need a precise language for comparing algorithms.</p>
+      </section>
+
+      <section id="computation-model">
+        <h2>2. Computation begins with a model</h2>
+        <p>Complexity statements are always relative to a model of computation. In classical complexity theory, we may use a Turing machine, a RAM machine, or a uniform family of Boolean circuits. Polynomial time is robust across standard models because they simulate one another with at most polynomial overhead.</p>
+        <p>For quantum computation, we use the <strong>uniform quantum circuit model</strong>. For each input length <em>n</em>, a classical polynomial-time procedure produces a finite circuit <em>C</em><span class="sub">n</span>. The circuit acts on input qubits and polynomially many auxiliary qubits, each auxiliary qubit initialized to |0⟩. It applies gates from a fixed finite universal gate set and finally measures designated output qubits in the computational basis.</p>
+
+        <div class="note-box">
+          <p class="note-title">Definition 1 <span>(Quantum circuit, informal)</span></p>
+          <p>A quantum circuit on <em>k</em> qubits is a finite sequence <em>U</em><span class="sub">1</span>, …, <em>U</em><span class="sub">T</span> of unitary gates, where each gate acts on a constant number of the <em>k</em> qubits. On initial state |ψ<span class="sub">0</span>⟩, its pre-measurement state is <em>U</em><span class="sub">T</span> ··· <em>U</em><span class="sub">1</span>|ψ<span class="sub">0</span>⟩. A specified measurement maps this state to a classical output distribution.</p>
+        </div>
+
+        <table class="comparison">
+          <thead><tr><th>Aspect</th><th>Classical circuit</th><th>Quantum circuit</th></tr></thead>
+          <tbody>
+            <tr><td>Basic unit</td><td>bit</td><td>qubit</td></tr>
+            <tr><td>State</td><td>one bit string</td><td>amplitudes over bit strings</td></tr>
+            <tr><td>Operations</td><td>Boolean gates</td><td>reversible unitary gates</td></tr>
+            <tr><td>Readout</td><td>inspect bits</td><td>probabilistic measurement</td></tr>
+          </tbody>
+        </table>
+
+        <div class="note-box remark">
+          <p class="note-title">Remark 2 <span>(Physical hardware versus computational model)</span></p>
+          <p>Uniformity prevents a circuit family from hiding an uncomputable amount of advice in its circuits. Real devices must additionally contend with noise, geometry, and fault tolerance; the ideal circuit model abstracts away those engineering constraints.</p>
+        </div>
+      </section>
+
+      <section id="queries">
+        <h2>3. The query complexity viewpoint</h2>
+        <p>Suppose the input is a function <span class="nowrap"><em>f</em> : {0,1}<sup>n</sup> → {0,1}<sup>m</sup></span>. Its truth table has 2<sup>n</sup><em>m</em> bits, so reading the whole input would obscure the phenomenon we want to study. Instead, the algorithm accesses <em>f</em> through a black-box <strong>oracle</strong>.</p>
+
+        <div class="note-box">
+          <p class="note-title">Definition 3 <span>(Query complexity)</span></p>
+          <p>Fix a class of allowed inputs ℱ and a target function <em>g</em> : ℱ → <em>S</em>. The deterministic query complexity <em>D</em>(<em>g</em>) is the least <em>T</em> for which a deterministic algorithm outputs <em>g</em>(<em>f</em>) after at most <em>T</em> oracle calls, for every <em>f</em> ∈ ℱ. The bounded-error randomized and quantum query complexities, <em>R</em><span class="sub">ε</span>(<em>g</em>) and <em>Q</em><span class="sub">ε</span>(<em>g</em>), are defined analogously, except the algorithm must be correct with probability at least 1 − ε on every valid <em>f</em>.</p>
+        </div>
+
+        <p>Unless stated otherwise, ε = 1/3; any fixed constant ε ∈ (0, 1/2) gives the same asymptotic classes under standard error reduction. Computation between queries is free. This deliberately simplified measure isolates the information cost of accessing <em>f</em>.</p>
+
+        <div class="note-box remark">
+          <p class="note-title">Remark 4 <span>(Worst-case convention)</span></p>
+          <p>The query bound and success condition are worst-case over valid inputs. Probability is only over the algorithm’s internal random bits or quantum measurement outcomes—not over a distribution on oracle functions.</p>
+        </div>
+
+        <h3>Classical and quantum access</h3>
+        <p>A classical query selects a string <em>x</em> and returns <em>f</em>(<em>x</em>). A quantum operation must be linear and reversible, so the map |<em>x</em>⟩ ↦ |<em>f</em>(<em>x</em>)⟩ is not a valid oracle for an arbitrary <em>f</em>. The standard quantum oracle instead acts on an <em>n</em>-qubit input register and an <em>m</em>-qubit target register:</p>
+        <div class="math" role="img" aria-label="U sub f maps ket x ket y to ket x ket y exclusive-or f of x">
+          U<span class="sub">f</span> |x⟩|y⟩ = |x⟩|y ⊕ f(x)⟩.
+        </div>
+        <p>Here ⊕ denotes bitwise XOR. The map is unitary because it permutes computational-basis states, and it is its own inverse. By linearity, for amplitudes {α<span class="sub">x,y</span>} it satisfies</p>
+        <div class="math">U<span class="sub">f</span> ∑<span class="sub">x,y</span> α<span class="sub">x,y</span>|x⟩|y⟩ = ∑<span class="sub">x,y</span> α<span class="sub">x,y</span>|x⟩|y ⊕ f(x)⟩.</div>
+        <p>This entire transformation counts as one query. A <em>T</em>-query quantum algorithm therefore has the form</p>
+        <div class="math">U<span class="sub">T</span> U<span class="sub">f</span> U<span class="sub">T−1</span> ··· U<span class="sub">1</span> U<span class="sub">f</span> U<span class="sub">0</span>|0<sup>k</sup>⟩,</div>
+        <p>where the fixed unitaries <em>U</em><span class="sub">i</span> do not depend on <em>f</em>. A final measurement determines the output. The amplitudes may encode relations among many values of <em>f</em>, but measurement cannot reveal the entire truth table.</p>
+
+        <div class="note-box remark">
+          <p class="note-title">Important 5 <span>(No free exponential readout)</span></p>
+          <p>Querying a superposition does not produce a list of all values <em>f</em>(<em>x</em>). A measurement yields only one classical outcome. Quantum algorithms are powerful when interference converts hidden global structure into a likely measurement outcome.</p>
+        </div>
+      </section>
+
+      <section id="speedup">
+        <h2>4. What counts as a quantum speedup?</h2>
+        <p>A speedup compares optimal resource bounds in two explicitly specified models. An upper bound such as <em>Q</em><span class="sub">1/3</span>(<em>g</em><span class="sub">n</span>) = O(<em>n</em>) describes an algorithm; a separation also needs a lower bound against <em>every</em> algorithm in the competing model.</p>
+        <ul>
+          <li>A <strong>polynomial speedup</strong> might compare <em>Q</em>(<em>n</em>) = O(√<em>n</em>) with <em>C</em>(<em>n</em>) = Ω(<em>n</em>).</li>
+          <li>An <strong>exponential speedup</strong> might compare <em>Q</em>(<em>n</em>) = O(<em>n</em>) with <em>C</em>(<em>n</em>) = Ω(2<sup><em>n</em>/2</sup>).</li>
+        </ul>
+        <p>The qualifiers matter. “Quantum is faster” is incomplete unless we name the problem, computational models, resource, and error guarantee. A query separation does not by itself imply an end-to-end runtime separation.</p>
+
+        <div class="interactive" aria-labelledby="race-title">
+          <div class="interactive-header">
+            <h3 id="race-title">Query-growth microscope</h3>
+            <span class="interactive-tag">Interactive estimate</span>
+          </div>
+          <label class="control-label" for="input-size"><span>Input length, n</span><output id="n-output">12</output></label>
+          <input id="input-size" type="range" min="4" max="30" value="12" step="1">
+          <div class="race-bars">
+            <div class="race-row"><span>Quantum O(n)</span><div class="bar-track"><div class="bar" id="quantum-bar"></div></div><span class="race-value" id="quantum-value"></span></div>
+            <div class="race-row"><span>Classical Ω(2ⁿᐟ²)</span><div class="bar-track"><div class="bar classical" id="classical-bar"></div></div><span class="race-value" id="classical-value"></span></div>
+          </div>
+          <p class="interactive-caption">This visualization compares representative growth rates from Simon’s query separation; it is not a runtime benchmark. Move the slider to see how quickly an exponential gap dominates a linear one.</p>
+        </div>
+
+        <div class="note-box question">
+          <p class="note-title">Guiding Question</p>
+          <p>If oracle queries are not the only operations an algorithm performs, why is a query separation still meaningful?</p>
+        </div>
+        <p>It establishes that the quantum model can extract information in a way the classical model cannot match with the same number of oracle calls. But query complexity is not the same as total runtime, and an oracle problem is not automatically a practical application. We will keep those limitations explicit.</p>
+      </section>
+
+      <section id="simon-preview">
+        <h2>5. The road to Simon’s algorithm</h2>
+        <div class="note-box">
+          <p class="note-title">Definition 6 <span>(Promise problem)</span></p>
+          <p>A promise problem is a pair Π = (Π<span class="sub">yes</span>, Π<span class="sub">no</span>) of disjoint sets. An algorithm must accept every input in Π<span class="sub">yes</span> and reject every input in Π<span class="sub">no</span>; its behavior outside Π<span class="sub">yes</span> ∪ Π<span class="sub">no</span> is unrestricted. A search promise problem similarly requires a valid output only on promised inputs.</p>
+        </div>
+
+        <p><strong>Simon’s problem</strong> is a search promise problem. We are given oracle access to <em>f</em> : {0,1}<sup>n</sup> → {0,1}<sup>n</sup> and promised that there exists a unique nonzero <em>s</em> ∈ {0,1}<sup>n</sup> such that, for all <em>x</em>, <em>y</em> ∈ {0,1}<sup>n</sup>,</p>
+        <div class="math" role="img" aria-label="f of x equals f of y if and only if y equals x exclusive-or s">
+          f(x) = f(y) &nbsp;⇔&nbsp; y = x ⊕ s.
+        </div>
+        <p>The equivalence implies that <em>f</em> is exactly two-to-one and its collision pairs are {<em>x</em>, <em>x</em> ⊕ <em>s</em>}. A classical algorithm learns <em>s</em> from a collision, since <em>s</em> = <em>x</em> ⊕ <em>y</em>. Under fewer than order 2<sup><em>n</em>/2</sup> queries, a collision occurs with only small probability, while sampling order 2<sup><em>n</em>/2</sup> distinct inputs finds one with constant probability by a birthday-paradox argument. Hence <em>R</em><span class="sub">1/3</span>(Simon<span class="sub">n</span>) = Θ(2<sup><em>n</em>/2</sup>).</p>
+        <p>The quantum algorithm avoids searching for a collision. Each oracle call, together with interference and measurement, yields a uniformly random <em>z</em> satisfying the linear equation <em>z</em> · <em>s</em> = 0 over 𝔽<span class="sub">2</span>. After O(<em>n</em>) repetitions, these equations span the (<em>n</em> − 1)-dimensional subspace orthogonal to <em>s</em> with constant probability, and Gaussian elimination over 𝔽<span class="sub">2</span> recovers <em>s</em>. Thus <em>Q</em><span class="sub">1/3</span>(Simon<span class="sub">n</span>) = O(<em>n</em>).</p>
+        <p>That description hides several ideas—superposition, phase, interference, multi-qubit states, and measurement. Those are exactly the subjects of the next chapter.</p>
+
+        <div class="note-box">
+          <p class="note-title">Takeaway</p>
+          <p>For bounded error, Simon’s problem satisfies <em>Q</em><span class="sub">1/3</span>(Simon<span class="sub">n</span>) = O(<em>n</em>) while <em>R</em><span class="sub">1/3</span>(Simon<span class="sub">n</span>) = Θ(2<sup><em>n</em>/2</sup>). These bounds give an exponential quantum query separation for a promise problem.</p>
+        </div>
+      </section>
+
+      <nav class="lesson-nav" aria-label="Lesson navigation">
+        <a href="index.html"><small>Back</small>← Course overview</a>
+        <a href="basics.html"><small>Next chapter</small>Quantum Computing Basics →</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Simon’s Algorithm &amp; Quantum Speedups</strong><br>15-455 Undergraduate Complexity Theory</p>
+    <p>Chapter 01 · Introduction</p>
+  </footer>
+  <script src="lesson.js"></script>
+</body>
+</html>

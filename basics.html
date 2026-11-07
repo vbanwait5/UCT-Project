@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quantum computing basics: qubits, measurement, interference, multiple qubits, and quantum gates.">
+  <title>02 · Quantum Computing Basics</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Quantum Speedups home">
+      <span class="brand-mark" aria-hidden="true">|ψ⟩</span>
+      <span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Overview</a>
+      <a href="intro.html">01 · Introduction</a>
+      <a class="active" href="basics.html" aria-current="page">02 · Basics</a>
+    </nav>
+  </header>
+
+  <main class="reading-shell">
+    <aside class="toc" aria-label="On this page">
+      <p class="toc-label">Reading progress</p>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
+      <p class="toc-label">On this page</p>
+      <ol>
+        <li><a href="#qubits">Qubits and amplitudes</a></li>
+        <li><a href="#measurement">Measurement</a></li>
+        <li><a href="#phase">Phase and interference</a></li>
+        <li><a href="#many-qubits">Multiple qubits</a></li>
+        <li><a href="#gates">Quantum gates</a></li>
+        <li><a href="#toolkit">Our toolkit</a></li>
+      </ol>
+    </aside>
+
+    <article class="lesson-content">
+      <header class="chapter-header">
+        <p class="chapter-kicker">Chapter 02</p>
+        <h1>Quantum Computing<br>Basics</h1>
+        <p class="chapter-summary">We formalize finite-dimensional pure states, projective measurement, tensor products, entanglement, and unitary evolution—the mathematical substrate of the circuit model.</p>
+        <div class="chapter-meta"><span>Mathematical foundations</span><span>25–30 minute read</span><span>Assumes basic linear algebra</span></div>
+      </header>
+
+      <section id="qubits">
+        <h2>1. Qubits and amplitudes</h2>
+        <p>We work over the field ℂ. For a vector |ψ⟩, its conjugate transpose is denoted ⟨ψ|, and its Euclidean norm is ‖|ψ⟩‖ = √⟨ψ|ψ⟩. The state space of one qubit is the two-dimensional complex Hilbert space ℂ<sup>2</sup> with distinguished computational basis {|0⟩, |1⟩}.</p>
+
+        <div class="note-box">
+          <p class="note-title">Definition 1 <span>(Qubit)</span></p>
+          <p>A pure state of one qubit is represented by a unit vector |ψ⟩ ∈ ℂ<sup>2</sup>. Relative to the computational basis, it has the unique expansion</p>
+          <div class="math">|ψ⟩ = α|0⟩ + β|1⟩, &nbsp;&nbsp;where&nbsp;&nbsp; |α|² + |β|² = 1.</div>
+          <p>The complex numbers α and β are called <em>amplitudes</em>.</p>
+        </div>
+
+        <p>The notation |ψ⟩ is called <em>ket notation</em>. Identifying kets with column vectors gives</p>
+        <div class="math">|0⟩ = [1, 0]ᵀ, &nbsp;&nbsp; |1⟩ = [0, 1]ᵀ, &nbsp;&nbsp; |ψ⟩ = [α, β]ᵀ.</div>
+        <p>Normalization ensures that measurement probabilities sum to one. The amplitudes themselves are not probabilities: they may be negative or complex, and their relative phase affects later computation.</p>
+
+        <div class="note-box">
+          <p class="note-title">Definition 2 <span>(Physical equivalence and global phase)</span></p>
+          <p>Unit vectors |ψ⟩ and |φ⟩ represent the same pure state exactly when |φ⟩ = <em>e</em><sup><em>iθ</em></sup>|ψ⟩ for some θ ∈ ℝ. The factor <em>e</em><sup><em>iθ</em></sup> is a <em>global phase</em>. Thus a physical pure state is formally a ray, rather than a particular unit vector.</p>
+        </div>
+
+        <div class="note-box remark">
+          <p class="note-title">Remark 3 <span>(Superposition is basis-dependent)</span></p>
+          <p>The state |+⟩ = (|0⟩ + |1⟩)/√2 is a superposition in the computational basis {|0⟩, |1⟩}. In the basis {|+⟩, |−⟩}, it is simply one basis state. We will normally measure in the computational basis unless stated otherwise.</p>
+        </div>
+
+        <div class="note-box remark">
+          <p class="note-title">Scope <span>(Pure and mixed states)</span></p>
+          <p>The general state of a quantum system is a density operator ρ: a positive semidefinite operator with tr(ρ) = 1. A state is pure exactly when ρ = |ψ⟩⟨ψ| for some unit vector |ψ⟩. Because an ideal circuit initialized in a basis state remains pure until measurement, state vectors are sufficient for our treatment; density operators become necessary for classical mixtures, noise, or subsystems of entangled states.</p>
+        </div>
+      </section>
+
+      <section id="measurement">
+        <h2>2. Measurement</h2>
+        <p>A quantum state is not directly readable. The standard computational-basis measurement of one qubit is the projective measurement {Π<span class="sub">0</span>, Π<span class="sub">1</span>}, where Π<span class="sub">b</span> = |<em>b</em>⟩⟨<em>b</em>| for <em>b</em> ∈ {0,1}.</p>
+
+        <div class="note-box">
+          <p class="note-title">Definition 4 <span>(Projective measurement)</span></p>
+          <p>A projective measurement is a finite collection of orthogonal projectors {Π<span class="sub">j</span>} satisfying Π<span class="sub">j</span><sup>†</sup> = Π<span class="sub">j</span>, Π<span class="sub">j</span>Π<span class="sub">k</span> = 0 for <em>j</em> ≠ <em>k</em>, and ∑<span class="sub">j</span>Π<span class="sub">j</span> = <em>I</em>. On unit state |ψ⟩, outcome <em>j</em> occurs with probability ‖Π<span class="sub">j</span>|ψ⟩‖². Conditioned on that outcome, the post-measurement state is Π<span class="sub">j</span>|ψ⟩ / ‖Π<span class="sub">j</span>|ψ⟩‖, provided the denominator is nonzero.</p>
+        </div>
+
+        <p>Applying this rule to |ψ⟩ = α|0⟩ + β|1⟩ gives a classical bit:</p>
+        <ul>
+          <li>outcome 0 occurs with probability |α|²;</li>
+          <li>outcome 1 occurs with probability |β|².</li>
+        </ul>
+        <p>Conditioned on observing <em>b</em>, the state becomes |<em>b</em>⟩. An immediate repetition of the same measurement therefore returns <em>b</em> with probability one.</p>
+
+        <div class="note-box">
+          <p class="note-title">Example 5 <span>(Unequal amplitudes)</span></p>
+          <p>For |ψ⟩ = (√3/2)|0⟩ + (1/2)|1⟩, the outcome probabilities are 3/4 and 1/4. Squaring the amplitudes—not reading them directly—produces the probabilities.</p>
+        </div>
+
+        <details class="quiz">
+          <summary>Check your understanding: can one measurement recover α and β?</summary>
+          <div class="quiz-body">
+            <p>No. A single measurement returns one classical outcome. Repeated computational-basis measurements on independently prepared copies estimate |α|² and |β|², but cannot distinguish states such as |+⟩ and |−⟩. Recovering an unknown state requires measurements in additional bases; this task is quantum state tomography.</p>
+          </div>
+        </details>
+      </section>
+
+      <section id="phase">
+        <h2>3. Phase and interference</h2>
+        <p>Global phase has no observable effect, but <strong>relative phase</strong> does. Consider the two states</p>
+        <div class="math">|+⟩ = (|0⟩ + |1⟩)/√2 &nbsp;&nbsp;and&nbsp;&nbsp; |−⟩ = (|0⟩ − |1⟩)/√2.</div>
+        <p>Computational-basis measurement gives 0 and 1 with equal probability for either state. Nevertheless, |+⟩ and |−⟩ are orthogonal: ⟨+|−⟩ = 0. They cannot differ by a global phase. Applying a Hadamard gate maps them to |0⟩ and |1⟩, making the relative sign perfectly distinguishable.</p>
+
+        <div class="note-box">
+          <p class="note-title">Idea <span>(Interference)</span></p>
+          <p>If a unitary maps several basis components into the same output basis component, linearity makes their complex amplitudes add before squared magnitudes are taken. Equal-phase contributions increase the resulting magnitude; opposite contributions cancel. “Interference” is this ordinary addition of amplitudes viewed computationally.</p>
+        </div>
+
+        <p>This is why a quantum state is richer than a classical random choice. Probabilities never cancel, but amplitudes can. Quantum algorithms are designed so wrong or irrelevant answers cancel while useful structure is reinforced.</p>
+
+        <div class="interactive" id="state-lab" aria-labelledby="lab-title">
+          <div class="interactive-header">
+            <h3 id="lab-title">One-qubit state laboratory</h3>
+            <span class="interactive-tag">Live state vector</span>
+          </div>
+          <div class="ket-display" id="ket-state" aria-live="polite">1|0⟩ + 0|1⟩</div>
+          <div>
+            <div class="probability-row"><span>|0⟩</span><div class="probability-track"><div class="probability-fill" id="p0-bar"></div></div><span id="p0">100%</span></div>
+            <div class="probability-row"><span>|1⟩</span><div class="probability-track"><div class="probability-fill" id="p1-bar"></div></div><span id="p1">0%</span></div>
+          </div>
+          <div class="lab-buttons" aria-label="State preparation and gate controls">
+            <button type="button" data-gate="zero">Prepare |0⟩</button>
+            <button type="button" data-gate="one">Prepare |1⟩</button>
+            <button type="button" data-gate="plus">Prepare |+⟩</button>
+            <button type="button" data-gate="x">Apply X</button>
+            <button type="button" data-gate="h">Apply H</button>
+            <button type="button" data-gate="measure">Measure</button>
+          </div>
+          <p class="measurement" id="measurement-message" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="many-qubits">
+        <h2>4. Multiple qubits</h2>
+        <p>If systems <em>A</em> and <em>B</em> have state spaces ℋ<span class="sub">A</span> and ℋ<span class="sub">B</span>, their joint state space is the tensor product ℋ<span class="sub">A</span> ⊗ ℋ<span class="sub">B</span>. Consequently, two qubits live in ℂ<sup>2</sup> ⊗ ℂ<sup>2</sup> ≅ ℂ<sup>4</sup>, with computational basis |00⟩, |01⟩, |10⟩, |11⟩.</p>
+        <div class="math">|ψ⟩ = α<span class="sub">00</span>|00⟩ + α<span class="sub">01</span>|01⟩ + α<span class="sub">10</span>|10⟩ + α<span class="sub">11</span>|11⟩,</div>
+        <div class="math">with &nbsp; |α<span class="sub">00</span>|² + |α<span class="sub">01</span>|² + |α<span class="sub">10</span>|² + |α<span class="sub">11</span>|² = 1.</div>
+        <p>More generally, the state space of <em>n</em> qubits is (ℂ<sup>2</sup>)<sup>⊗<em>n</em></sup>, a 2<sup><em>n</em></sup>-dimensional complex vector space. Its computational basis is indexed by strings <em>x</em> ∈ {0,1}<sup><em>n</em></sup>, so every pure state has the form</p>
+        <div class="math">|ψ⟩ = ∑<span class="sub">x∈{0,1}ⁿ</span> α<span class="sub">x</span>|x⟩, &nbsp;&nbsp; ∑<span class="sub">x</span>|α<span class="sub">x</span>|² = 1.</div>
+        <p>Measuring all qubits in the computational basis returns <em>x</em> with probability |α<span class="sub">x</span>|² and leaves state |<em>x</em>⟩. Although a generic state requires 2<sup><em>n</em></sup> amplitudes to describe classically, measurement does not expose that description.</p>
+
+        <h3>Product states and entanglement</h3>
+        <p>If qubit <em>A</em> is in state |ψ⟩ and qubit <em>B</em> is in state |φ⟩ independently, their joint state is |ψ⟩ ⊗ |φ⟩, abbreviated |ψ⟩|φ⟩. Bilinearity determines the product; for example,</p>
+        <div class="math">(α|0⟩ + β|1⟩) ⊗ (γ|0⟩ + δ|1⟩) = αγ|00⟩ + αδ|01⟩ + βγ|10⟩ + βδ|11⟩.</div>
+
+        <div class="note-box">
+          <p class="note-title">Definition 6 <span>(Separable and entangled pure states)</span></p>
+          <p>A bipartite pure state |ψ⟩ ∈ ℋ<span class="sub">A</span> ⊗ ℋ<span class="sub">B</span> is <em>separable</em> if |ψ⟩ = |a⟩ ⊗ |b⟩ for unit vectors |a⟩ ∈ ℋ<span class="sub">A</span> and |b⟩ ∈ ℋ<span class="sub">B</span>. Otherwise it is <em>entangled</em>. The Bell state (|00⟩ + |11⟩)/√2 is entangled.</p>
+        </div>
+        <p>To see why the Bell state is entangled, suppose its amplitudes factored as (α|0⟩ + β|1⟩)(γ|0⟩ + δ|1⟩). The nonzero |00⟩ and |11⟩ coefficients require αγ ≠ 0 and βδ ≠ 0, while the zero |01⟩ and |10⟩ coefficients require αδ = βγ = 0—a contradiction.</p>
+      </section>
+
+      <section id="gates">
+        <h2>5. Quantum gates</h2>
+        <p>A closed quantum system evolves linearly by a <strong>unitary</strong> operator. A square complex matrix <em>U</em> is unitary when <em>U</em><sup>†</sup><em>U</em> = <em>I</em>. Equivalently, it preserves inner products: ⟨<em>U</em>ψ|<em>U</em>φ⟩ = ⟨ψ|φ⟩. In particular, it preserves norms and is reversible, with <em>U</em><sup>−1</sup> = <em>U</em><sup>†</sup>.</p>
+
+        <div class="note-box">
+          <p class="note-title">Definition 7 <span>(Quantum gate)</span></p>
+          <p>A quantum gate on <em>k</em> qubits is a unitary operator <em>U</em> on (ℂ<sup>2</sup>)<sup>⊗<em>k</em></sup>, represented in the computational basis by a 2<sup><em>k</em></sup> × 2<sup><em>k</em></sup> unitary matrix. When applied to selected qubits of a larger register, it acts as <em>U</em> on those factors and as the identity on all others.</p>
+        </div>
+
+        <h3>The Pauli-X gate</h3>
+        <div class="math">X = <span class="matrix"><span>0</span><span>1</span><span>1</span><span>0</span></span>, &nbsp;&nbsp; X|0⟩ = |1⟩, &nbsp;&nbsp; X|1⟩ = |0⟩.</div>
+        <p>The X gate acts like a classical NOT on computational-basis states. On a superposition, it swaps the amplitudes of |0⟩ and |1⟩.</p>
+
+        <h3>The Hadamard gate</h3>
+        <div class="math">H = <span class="frac">1/√2</span><span class="matrix"><span>1</span><span>1</span><span>1</span><span>−1</span></span>, &nbsp;&nbsp; H|0⟩ = |+⟩, &nbsp;&nbsp; H|1⟩ = |−⟩.</div>
+        <p>The Hadamard gate moves between the computational basis and the {|+⟩, |−⟩} basis. It creates an equal superposition from a basis state, but it can also remove one: H|+⟩ = |0⟩ and H|−⟩ = |1⟩. Thus H² = I.</p>
+
+        <div class="note-box">
+          <p class="note-title">Proposition 8 <span>(Hadamard transform on <em>n</em> qubits)</span></p>
+          <p>For every <em>x</em> ∈ {0,1}<sup><em>n</em></sup>,</p>
+          <div class="math">H<sup>⊗n</sup>|x⟩ = 1/√(2<sup>n</sup>) ∑<span class="sub">z∈{0,1}ⁿ</span> (−1)<sup>x·z</sup>|z⟩,</div>
+          <p>where <em>x</em> · <em>z</em> = ∑<span class="sub">i=1</span><sup>n</sup> <em>x</em><span class="sub">i</span><em>z</em><span class="sub">i</span> is computed modulo 2.</p>
+        </div>
+        <p><strong>Proof.</strong> For a single bit <em>b</em>, H|<em>b</em>⟩ = (|0⟩ + (−1)<sup><em>b</em></sup>|1⟩)/√2. Taking the tensor product over positions <em>i</em> ∈ {1,…,<em>n</em>} and expanding by multilinearity gives one term |<em>z</em>⟩ for each <em>z</em> ∈ {0,1}<sup><em>n</em></sup>. Its coefficient is 2<sup>−<em>n</em>/2</sup>∏<span class="sub">i</span>(−1)<sup><em>x</em><span class="sub">i</span><em>z</em><span class="sub">i</span></sup> = 2<sup>−<em>n</em>/2</sup>(−1)<sup><em>x</em>·<em>z</em></sup>. ∎</p>
+        <p>The special case <em>x</em> = 0<sup><em>n</em></sup> produces the uniform superposition 2<sup>−<em>n</em>/2</sup>∑<span class="sub">z</span>|<em>z</em>⟩. The phase factor (−1)<sup><em>x</em>·<em>z</em></sup> is the algebraic source of the interference used by Simon’s algorithm.</p>
+
+        <h3>The controlled-NOT gate</h3>
+        <p>CNOT acts on two qubits. On computational-basis states it flips the target bit exactly when the control bit is 1, and linearity specifies its action on every superposition:</p>
+        <div class="math">CNOT |a,b⟩ = |a, b ⊕ a⟩.</div>
+        <p>For example, applying CNOT to |+⟩|0⟩ = (|00⟩ + |10⟩)/√2 produces the entangled Bell state (|00⟩ + |11⟩)/√2.</p>
+
+        <details class="quiz">
+          <summary>Check your understanding: what happens if H is applied twice to |0⟩?</summary>
+          <div class="quiz-body">
+            <p>The first H gives (|0⟩ + |1⟩)/√2. On the second application, the |1⟩ contributions cancel while the |0⟩ contributions reinforce, returning |0⟩. You can verify this in the state laboratory above.</p>
+          </div>
+        </details>
+      </section>
+
+      <section id="toolkit">
+        <h2>6. The toolkit we will carry forward</h2>
+        <p>The essential ideas can now be summarized compactly:</p>
+        <ol>
+          <li>An <em>n</em>-qubit pure state is a unit vector in (ℂ<sup>2</sup>)<sup>⊗<em>n</em></sup>, modulo global phase.</li>
+          <li>A projective measurement obeys the Born rule and changes the post-measurement state.</li>
+          <li>Closed-system evolution is unitary, hence linear, norm-preserving, and reversible.</li>
+          <li>Relative phase affects the addition of amplitudes and can be converted into observable probabilities.</li>
+          <li>A joint pure state is entangled exactly when it does not factor across the relevant tensor-product partition.</li>
+        </ol>
+        <p>In Simon’s algorithm, Hadamard gates will create a uniform superposition, an oracle query will encode the hidden shift, and another layer of Hadamards will use interference to reveal linear constraints on that shift. Every step rests on the definitions above.</p>
+
+        <div class="note-box">
+          <p class="note-title">Takeaway</p>
+          <p>The circuit model alternates unitary evolution with measurement. Its state space is a tensor product; its dynamics are linear; its output probabilities follow the Born rule. Simon’s algorithm is an explicit construction inside this model, not an appeal to quantum parallelism alone.</p>
+        </div>
+      </section>
+
+      <nav class="lesson-nav" aria-label="Lesson navigation">
+        <a href="intro.html"><small>Previous chapter</small>← Introduction</a>
+        <a href="index.html"><small>End of current material</small>Return to overview →</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Simon’s Algorithm &amp; Quantum Speedups</strong><br>15-455 Undergraduate Complexity Theory</p>
+    <p>Chapter 02 · Quantum Basics</p>
+  </footer>
+  <script src="lesson.js"></script>
+</body>
+</html>
