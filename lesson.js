@@ -281,6 +281,40 @@ if (rankLab) {
   renderRankLab();
 }
 
+const interferenceProofLab = document.querySelector('#interference-proof-lab');
+if (interferenceProofLab) {
+  const sInput = document.querySelector('#proof-s');
+  const zInput = document.querySelector('#proof-z');
+  const dotOutput = document.querySelector('#proof-dot');
+  const contributionsOutput = document.querySelector('#proof-contributions');
+  const verdictOutput = document.querySelector('#proof-verdict');
+  const x0 = 0b011;
+  const parity = value => {
+    let p = 0;
+    let v = value;
+    while (v) { p ^= (v & 1); v >>= 1; }
+    return p;
+  };
+
+  function renderInterferenceProof() {
+    const s = parseInt(sInput.value, 2);
+    const z = parseInt(zInput.value, 2);
+    const dot = parity(s & z);
+    const first = parity(x0 & z) ? -1 : 1;
+    const second = parity((x0 ^ s) & z) ? -1 : 1;
+    const sum = first + second;
+    dotOutput.textContent = String(dot);
+    contributionsOutput.textContent = `${first} + ${second} = ${sum}`;
+    verdictOutput.textContent = sum === 0
+      ? 'Destructive interference: this z has amplitude 0 and cannot be measured.'
+      : 'Constructive interference: this z survives, with probability 1/4 for n = 3.';
+  }
+
+  sInput.addEventListener('change', renderInterferenceProof);
+  zInput.addEventListener('change', renderInterferenceProof);
+  renderInterferenceProof();
+}
+
 const birthdayLab = document.querySelector('#birthday-lab');
 if (birthdayLab) {
   const nInput = document.querySelector('#birthday-n');
