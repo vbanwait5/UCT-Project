@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Correctness proof and complexity analysis for Simon's quantum algorithm."><title>06 · Correctness and Query Analysis</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a class="active" href="correctness.html" aria-current="page">06 · Proof</a><a href="lower-bound.html">07</a><a href="implications.html">08</a></nav></header>
+  <main class="reading-shell">
+    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#distribution">Output distribution</a></li><li><a href="#rank">Enough equations</a></li><li><a href="#error">Error bound</a></li><li><a href="#complexity">Resource bounds</a></li><li><a href="#rank-lab-section">Rank laboratory</a></li><li><a href="#subtlety">Proof subtleties</a></li></ol></aside>
+    <article class="lesson-content">
+      <header class="chapter-header"><p class="chapter-kicker">Chapter 06</p><h1>Correctness &amp;<br>Query Analysis</h1><p class="chapter-summary">We prove two claims: each sample is uniform on s⊥, and O(n) samples span that subspace with high probability.</p><div class="chapter-meta"><span>Proof chapter</span><span>25–30 minute read</span><span>Includes rank lab</span></div></header>
+
+      <section id="distribution">
+        <h2>1. The exact output distribution</h2>
+        <div class="note-box"><p class="note-title">Lemma 1 <span>(Fourier sampling a Simon coset)</span></p><p>For any x<sub>0</sub> and nonzero s, applying H<sup>⊗n</sup> to (|x<sub>0</sub>⟩ + |x<sub>0</sub> ⊕ s⟩)/√2 and measuring yields a uniformly random z ∈ s<sup>⊥</sup>.</p></div>
+        <p><strong>Proof.</strong> The amplitude of |<em>z</em>⟩ is</p>
+        <div class="math">α<span class="sub">z</span> = (−1)<sup>x₀·z</sup>[1 + (−1)<sup>s·z</sup>] / √(2<sup>n+1</sup>).</div>
+        <p>When <em>s</em>·<em>z</em>=1, α<sub>z</sub>=0. When <em>s</em>·<em>z</em>=0, |α<sub>z</sub>| = 2/√(2<sup>n+1</sup>) = 1/√(2<sup>n−1</sup>). The subspace <em>s</em><sup>⊥</sup> has dimension <em>n</em>−1 and therefore contains 2<sup>n−1</sup> vectors. Each has probability 1/2<sup>n−1</sup>, and the probabilities sum to one. ∎</p>
+        <p>The distribution is independent of <em>x</em><sub>0</sub>. This is why measuring, discarding, or never explicitly naming the second-register outcome all lead to the same final sample distribution.</p>
+      </section>
+
+      <section id="rank">
+        <h2>2. When do the equations determine s?</h2>
+        <p>Let <em>d</em>=<em>n</em>−1. After choosing a basis for <em>s</em><sup>⊥</sup>, the sampled rows are independent uniform vectors in 𝔽<sub>2</sub><sup>d</sup>. If the current rows span an <em>r</em>-dimensional subspace, the next row is dependent with probability 2<sup>r</sup>/2<sup>d</sup>.</p>
+        <div class="note-box"><p class="note-title">Proposition 2 <span>(Full-rank probability)</span></p><p>Exactly d samples are linearly independent with probability</p><div class="math">∏<span class="sub">r=0</span><sup>d−1</sup>(1 − 2<sup>r−d</sup>) = ∏<span class="sub">j=1</span><sup>d</sup>(1 − 2<sup>−j</sup>).</div></div>
+        <p>This product approaches approximately 0.288 as <em>d</em> grows. So <em>n</em>−1 samples already succeed with constant probability, but a few extra samples give a much cleaner high-probability guarantee.</p>
+      </section>
+
+      <section id="error">
+        <h2>3. A high-probability bound</h2>
+        <div class="note-box"><p class="note-title">Theorem 3 <span>(Rank accumulation)</span></p><p>Let z<sub>1</sub>,…,z<sub>t</sub> be independent uniform samples from s<sup>⊥</sup>. Then</p><div class="math">Pr[span{z<span class="sub">1</span>,…,z<span class="sub">t</span>} ≠ s<sup>⊥</sup>] &lt; 2<sup>(n−1)−t</sup>.</div></div>
+        <p><strong>Proof.</strong> Work in the <em>d</em>-dimensional space <em>s</em><sup>⊥</sup>. If the rows fail to span, there exists a nonzero vector <em>w</em> orthogonal to every sampled row. For fixed nonzero <em>w</em>, a uniform row is orthogonal to <em>w</em> with probability 1/2, so all <em>t</em> rows are orthogonal with probability 2<sup>−t</sup>. Union bound over the 2<sup>d</sup>−1 nonzero choices of <em>w</em>. ∎</p>
+        <p>Taking <em>t</em> = <em>n</em>−1+<em>c</em> makes failure probability less than 2<sup>−<em>c</em></sup>. Thus O(<em>n</em> + log(1/δ)) queries suffice for failure probability at most δ.</p>
+        <div class="note-box connection"><p class="note-title">Connection: amplification in probabilistic time</p><p>As with BPP error reduction, independent repetition converts constant success into exponentially small failure. Here the aggregation rule is not majority vote: it is rank growth in a vector space.</p></div>
+      </section>
+
+      <section id="complexity">
+        <h2>4. Query, time, and space accounting</h2>
+        <table class="comparison"><thead><tr><th>Resource</th><th>Bound</th><th>Reason</th></tr></thead><tbody>
+          <tr><td>Oracle queries</td><td>O(n + log(1/δ))</td><td>One per sampled equation</td></tr>
+          <tr><td>Known quantum gates</td><td>O(n²) plus oracle cost</td><td>O(n) Hadamards per round across O(n) rounds</td></tr>
+          <tr><td>Qubits</td><td>2n plus oracle workspace</td><td>Two n-qubit registers, reusable each round</td></tr>
+          <tr><td>Classical postprocessing</td><td>O(n³) bit operations</td><td>Gaussian elimination on an O(n) × n matrix</td></tr>
+          <tr><td>Classical storage</td><td>O(n²) bits</td><td>Store O(n) sampled n-bit rows</td></tr>
+        </tbody></table>
+        <p>The query complexity is linear, but the full idealized algorithm also includes polynomial classical work. This distinction is central: an exponential query separation is stronger than an algorithmic anecdote, but weaker than a hardware runtime benchmark.</p>
+      </section>
+
+      <section id="rank-lab-section">
+        <h2>5. Build the equation system yourself</h2>
+        <div class="interactive" id="rank-lab" aria-labelledby="rank-title">
+          <div class="interactive-header"><h3 id="rank-title">GF(2) rank laboratory</h3><span class="interactive-tag">Hidden s = 1011</span></div>
+          <p>Each click samples a uniform z satisfying z · s = 0. Dependent rows are valid but do not shrink the candidate set.</p>
+          <div class="lab-buttons"><button type="button" id="sample-equation">Sample equation</button><button type="button" id="reset-equations">Reset</button></div>
+          <p><strong>Current rank:</strong> <span id="rank-value"></span></p><div class="rank-meter" aria-hidden="true"><span id="rank-bar"></span></div>
+          <div class="equation-list" id="rank-rows"></div>
+          <div class="output-panel"><p id="rank-candidate" aria-live="polite"></p></div>
+        </div>
+      </section>
+
+      <section id="subtlety">
+        <h2>6. Proof subtleties worth noticing</h2>
+        <ul>
+          <li><strong>Zero is a valid sample.</strong> It gives the tautology 0·s=0 and adds no rank.</li>
+          <li><strong>Samples are uniform only under the exact promise.</strong> Noise or extra collisions change the state and its Fourier spectrum.</li>
+          <li><strong>Rank n−1 is the stopping condition.</strong> Rank n is impossible because every row lies in s⊥.</li>
+          <li><strong>The algorithm is Las Vegas with verification.</strong> Under the promise, once a nonzero candidate s′ is found, two additional queries can check f(0)=f(s′); if verification fails, continue sampling.</li>
+        </ul>
+        <div class="note-box"><p class="note-title">Takeaway</p><p>Correctness decomposes cleanly into a quantum lemma (uniform Fourier sampling of s⊥) and a classical lemma (random rows span an (n−1)-dimensional space after O(n) samples).</p></div>
+      </section>
+
+      <nav class="lesson-nav" aria-label="Lesson navigation"><a href="algorithm.html"><small>Previous chapter</small>Simon’s Algorithm</a><a href="lower-bound.html"><small>Next chapter</small>Classical Lower Bound</a></nav>
+    </article>
+  </main>
+  <footer class="site-footer"><p><strong>Simon’s Algorithm &amp; Quantum Speedups</strong><br>15-455 Undergraduate Complexity Theory</p><p>Chapter 06 · Correctness</p></footer><script src="lesson.js"></script>
+</body>
+</html>

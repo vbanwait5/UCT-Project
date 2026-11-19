@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quantum circuits, reversible computation, and coherent oracle queries for Simon's algorithm.">
+  <title>03 · Quantum Circuits and Oracles</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span></a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a class="active" href="circuits.html" aria-current="page">03 · Circuits</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a href="correctness.html">06</a><a href="lower-bound.html">07</a><a href="implications.html">08</a>
+    </nav>
+  </header>
+
+  <main class="reading-shell">
+    <aside class="toc" aria-label="On this page">
+      <p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
+      <p class="toc-label">On this page</p>
+      <ol><li><a href="#circuit-model">Circuit model</a></li><li><a href="#reversibility">Reversibility</a></li><li><a href="#oracle">Quantum oracles</a></li><li><a href="#kickback">Phase kickback</a></li><li><a href="#accounting">Resource accounting</a></li><li><a href="#connections">CS455 connections</a></li></ol>
+    </aside>
+
+    <article class="lesson-content">
+      <header class="chapter-header">
+        <p class="chapter-kicker">Chapter 03</p>
+        <h1>Quantum Circuits<br>&amp; Oracles</h1>
+        <p class="chapter-summary">We turn state-vector mathematics into an algorithmic model: local unitary gates, reversible embeddings of classical functions, and coherent black-box access.</p>
+        <div class="chapter-meta"><span>Circuit model</span><span>20–25 minute read</span><span>Includes oracle lab</span></div>
+      </header>
+
+      <section id="circuit-model">
+        <h2>1. From a unitary to a circuit</h2>
+        <p>An arbitrary unitary on <em>n</em> qubits is a 2<sup><em>n</em></sup> × 2<sup><em>n</em></sup> matrix and therefore requires exponentially many parameters to describe. Efficient quantum computation does not grant such a matrix as a unit-cost instruction. Instead, it composes <strong>local</strong> gates, each acting on a constant number of qubits.</p>
+        <div class="note-box">
+          <p class="note-title">Definition 1 <span>(Quantum circuit family)</span></p>
+          <p>A quantum circuit is a directed acyclic network of constant-arity unitary gates, with wires representing qubits ordered in time. A family {<em>C</em><span class="sub">n</span>} is polynomial-size if <em>C</em><span class="sub">n</span> contains poly(<em>n</em>) gates, and polynomial-time uniform if a deterministic polynomial-time TM outputs a description of <em>C</em><span class="sub">n</span> on input 1<sup><em>n</em></sup>.</p>
+        </div>
+        <p>Uniformity is the circuit analogue of requiring one finite algorithm rather than unrelated advice for every input length. A fixed finite universal gate set can approximate any desired local unitary to inverse-exponential accuracy using only polynomial overhead.</p>
+        <div class="circuit-board" role="img" aria-label="Two-register Simon circuit skeleton">
+          <div class="circuit-row"><span class="register-label">|0ⁿ⟩</span><span class="circuit-wire"></span><span class="circuit-gate">H⊗ⁿ</span><span class="circuit-wire"></span><span class="circuit-gate oracle">U<sub>f</sub></span></div>
+          <div class="circuit-row"><span class="register-label">|0ⁿ⟩</span><span class="circuit-wire"></span><span class="circuit-gate">I</span><span class="circuit-wire"></span><span class="circuit-gate oracle">U<sub>f</sub></span></div>
+        </div>
+        <p>This skeleton separates the algorithm’s known gates from the single black-box operation <em>U</em><span class="sub">f</span>. Query complexity counts occurrences of that oracle box; ordinary circuit complexity counts all gates after the oracle itself has been assigned an implementation.</p>
+      </section>
+
+      <section id="reversibility">
+        <h2>2. Why classical functions need reversible embeddings</h2>
+        <p>Unitary evolution is injective. The direct map |<em>x</em>⟩ ↦ |<em>f</em>(<em>x</em>)⟩ cannot be unitary when <em>f</em> has collisions: two orthogonal basis states would map to the same state, destroying inner products.</p>
+        <div class="note-box">
+          <p class="note-title">Proposition 2 <span>(Standard reversible embedding)</span></p>
+          <p>For every <em>f</em> : {0,1}<sup><em>n</em></sup> → {0,1}<sup><em>m</em></sup>, the map <em>U</em><span class="sub">f</span>|<em>x</em>⟩|<em>y</em>⟩ = |<em>x</em>⟩|<em>y</em> ⊕ <em>f</em>(<em>x</em>)⟩ is unitary.</p>
+        </div>
+        <p><strong>Proof.</strong> On computational-basis states, the map is a permutation: applying it twice returns |<em>x</em>⟩|<em>y</em>⟩ because <em>a</em> ⊕ <em>a</em> = 0. Thus <em>U</em><span class="sub">f</span><sup>−1</sup> = <em>U</em><span class="sub">f</span>. A linear operator that permutes an orthonormal basis preserves inner products and is unitary. ∎</p>
+
+        <div class="interactive" id="reversible-oracle-lab" aria-labelledby="oracle-lab-title">
+          <div class="interactive-header"><h3 id="oracle-lab-title">Reversible oracle lab</h3><span class="interactive-tag">Basis-state simulator</span></div>
+          <p>Use the parity function <em>f</em>(<em>x</em><span class="sub">1</span><em>x</em><span class="sub">2</span>) = <em>x</em><span class="sub">1</span> ⊕ <em>x</em><span class="sub">2</span>. Notice that <em>x</em> is preserved and the target is toggled.</p>
+          <div class="control-grid">
+            <div class="control-group"><label for="oracle-x">Input register x</label><select id="oracle-x"><option>00</option><option>01</option><option>10</option><option>11</option></select></div>
+            <div class="control-group"><label for="oracle-y">Target bit y</label><select id="oracle-y"><option>0</option><option>1</option></select></div>
+          </div>
+          <div class="output-panel"><p><strong>Computed value:</strong> f(x) = <span id="oracle-fx" class="binary"></span></p><p id="oracle-mapping" class="math"></p></div>
+          <p class="interactive-caption">Because every output basis state has exactly one predecessor, the oracle remains reversible even though parity itself is many-to-one.</p>
+        </div>
+      </section>
+
+      <section id="oracle">
+        <h2>3. Coherent access is more than parallel evaluation</h2>
+        <p>Linearity determines the oracle’s action on superpositions:</p>
+        <div class="math">U<span class="sub">f</span> ∑<span class="sub">x,y</span> α<span class="sub">x,y</span>|x⟩|y⟩ = ∑<span class="sub">x,y</span> α<span class="sub">x,y</span>|x⟩|y ⊕ f(x)⟩.</div>
+        <p>It is tempting to say that the oracle “evaluates every input at once.” That phrase is incomplete: the resulting state is not a readable table. A measurement yields one outcome. The algorithmic opportunity is that subsequent gates may combine amplitudes from different inputs, allowing a global property of <em>f</em> to control interference.</p>
+        <div class="note-box remark">
+          <p class="note-title">Remark 3 <span>(Oracle conventions matter)</span></p>
+          <p>Different quantum encodings of a classical black box need not be equivalent at unit cost. Query-complexity claims must state the oracle action. Simon’s algorithm uses the standard XOR oracle above.</p>
+        </div>
+      </section>
+
+      <section id="kickback">
+        <h2>4. Phase kickback</h2>
+        <p>For a Boolean function <em>f</em>, prepare the target qubit in |−⟩ = (|0⟩ − |1⟩)/√2. Since X|−⟩ = −|−⟩, the standard oracle acts as</p>
+        <div class="math">U<span class="sub">f</span>|x⟩|−⟩ = (−1)<sup>f(x)</sup>|x⟩|−⟩.</div>
+        <p>The function value has been moved into the phase of the input register while the target returns unchanged. This phenomenon is called <strong>phase kickback</strong>. It is not the form used in the standard presentation of Simon’s algorithm, but it is a recurring design pattern in Deutsch–Jozsa, Bernstein–Vazirani, phase estimation, and many later algorithms.</p>
+        <details class="quiz"><summary>Derive the phase-kickback identity</summary><div class="quiz-body"><p>Expand |−⟩. If f(x)=0, the target is unchanged. If f(x)=1, the oracle applies X, and X(|0⟩−|1⟩)/√2 = (|1⟩−|0⟩)/√2 = −|−⟩.</p></div></details>
+      </section>
+
+      <section id="accounting">
+        <h2>5. What resource are we counting?</h2>
+        <table class="comparison"><thead><tr><th>Measure</th><th>Counts</th><th>Treats as free</th></tr></thead><tbody>
+          <tr><td>Query complexity</td><td>Calls to U<sub>f</sub></td><td>All inter-query computation</td></tr>
+          <tr><td>Gate complexity</td><td>Elementary gates</td><td>Nothing except wiring conventions</td></tr>
+          <tr><td>Depth</td><td>Parallel gate layers</td><td>Gates within one layer</td></tr>
+          <tr><td>Space</td><td>Qubits simultaneously present</td><td>Time and reused qubits</td></tr>
+        </tbody></table>
+        <p>A query upper bound becomes a runtime upper bound only after we specify a circuit for the oracle and account for classical postprocessing. Simon’s separation is deliberately about black-box information access.</p>
+      </section>
+
+      <section id="connections">
+        <h2>6. Connections to CS455</h2>
+        <div class="note-box connection"><p class="note-title">Boolean circuits</p><p>Uniform quantum circuits mirror the uniform circuit families used in classical complexity, but every internal quantum gate is unitary. Fan-out and erasure are not primitive quantum operations; information must be moved reversibly.</p></div>
+        <div class="note-box connection"><p class="note-title">Space complexity</p><p>Ancilla qubits play the role of work tape. They may be reused only after being returned to a known state—often by running a computation backward, a technique called uncomputation.</p></div>
+        <div class="note-box connection"><p class="note-title">Relativization</p><p>An oracle gate makes “computation relative to f” concrete. Later, the Simon separation will become evidence about BQP<sup>A</sup> versus BPP<sup>A</sup> for a suitable oracle A, not an unconditional separation of BQP and BPP.</p></div>
+      </section>
+
+      <nav class="lesson-nav" aria-label="Lesson navigation"><a href="basics.html"><small>Previous chapter</small>Quantum Computing Basics</a><a href="problem.html"><small>Next chapter</small>Simon’s Problem</a></nav>
+    </article>
+  </main>
+  <footer class="site-footer"><p><strong>Simon’s Algorithm &amp; Quantum Speedups</strong><br>15-455 Undergraduate Complexity Theory</p><p>Chapter 03 · Circuits &amp; Oracles</p></footer>
+  <script src="lesson.js"></script>
+</body>
+</html>

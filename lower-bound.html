@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="The randomized classical query lower bound for Simon's problem."><title>07 · Classical Randomized Lower Bound</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a href="correctness.html">06</a><a class="active" href="lower-bound.html" aria-current="page">07 · Lower bound</a><a href="implications.html">08</a></nav></header>
+  <main class="reading-shell">
+    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#goal">Lower-bound goal</a></li><li><a href="#distribution">Hard distribution</a></li><li><a href="#collision">Collision lemma</a></li><li><a href="#yao">Yao’s principle</a></li><li><a href="#upper">Matching upper bound</a></li><li><a href="#simulator">Birthday simulator</a></li><li><a href="#connections">CS455 connections</a></li></ol></aside>
+    <article class="lesson-content">
+      <header class="chapter-header"><p class="chapter-kicker">Chapter 07</p><h1>Classical Randomized<br>Lower Bound</h1><p class="chapter-summary">Until a classical transcript contains a collision, the hidden shift is almost perfectly concealed. The birthday scale 2<sup>n/2</sup> is therefore unavoidable.</p><div class="chapter-meta"><span>Lower bound</span><span>25–30 minute read</span><span>Includes collision simulator</span></div></header>
+
+      <section id="goal">
+        <h2>1. What must be proved?</h2>
+        <p>An O(<em>n</em>)-query quantum algorithm alone does not establish a speedup. We need a lower bound against <em>every</em> classical randomized algorithm, including adaptive algorithms whose next query depends on all previous answers.</p>
+        <div class="note-box"><p class="note-title">Theorem 1 <span>(Classical randomized query complexity)</span></p><p>Every randomized classical algorithm that solves Simon’s search problem with success probability at least 2/3 on every promised oracle makes Ω(2<sup>n/2</sup>) queries in the worst case. Moreover, O(2<sup>n/2</sup>) queries suffice. Hence</p><div class="math">R<span class="sub">1/3</span>(Simon<span class="sub">n</span>) = Θ(2<sup>n/2</sup>).</div></div>
+        <p>The lower bound has two ideas: choose a symmetric distribution over hard inputs, then show that a deterministic algorithm using too few queries has low average success under that distribution.</p>
+      </section>
+
+      <section id="distribution">
+        <h2>2. A hard input distribution</h2>
+        <p>Let <em>N</em> = 2<sup>n</sup>. Choose the secret <em>s</em> uniformly from the <em>N</em>−1 nonzero strings. This partitions the domain into <em>N</em>/2 pairs {<em>x</em>, <em>x</em> ⊕ <em>s</em>}. Assign distinct random output labels to these pairs.</p>
+        <p>Consider a fixed deterministic adaptive algorithm. Before it sees a repeated output, every response is a fresh random label. Those fresh labels reveal no preference among the secrets not already ruled out by pairwise differences of queried points. Adaptivity cannot manufacture information from the names of fresh labels.</p>
+        <div class="note-box remark"><p class="note-title">Remark 2 <span>(The oracle labels are camouflage)</span></p><p>The lower bound randomizes labels to prevent the algorithm from exploiting their representation. The only invariant information is whether two answers are equal.</p></div>
+      </section>
+
+      <section id="collision">
+        <h2>3. The collision probability lemma</h2>
+        <p>Suppose the algorithm has queried distinct points <em>x</em><sub>1</sub>,…,<em>x</em><sub>q</sub>. A collision occurs exactly when</p>
+        <div class="math">s = x<span class="sub">i</span> ⊕ x<span class="sub">j</span> &nbsp; for some i ≠ j.</div>
+        <p>There are at most <span class="nowrap">(<em>q</em> choose 2)</span> such nonzero pairwise differences. Since <em>s</em> was uniform among <em>N</em>−1 possibilities, a union bound gives</p>
+        <div class="math">Pr[collision in q queries] ≤ q(q−1) / [2(N−1)].</div>
+        <p>If <em>q</em> = o(√<em>N</em>), this probability is o(1). Conditioned on no collision, the algorithm can only guess among almost all remaining secrets; its success probability is also negligible. Constant success therefore requires <em>q</em> = Ω(√<em>N</em>) = Ω(2<sup>n/2</sup>).</p>
+        <div class="note-box"><p class="note-title">Why adaptivity does not break the bound</p><p>Until the first collision, the answers are independent fresh labels. Conditioning on that collision-free transcript may determine future queries, but it does not correlate those queries with the still-unseen random secret beyond ruling out differences already tested. The same pair-counting argument applies.</p></div>
+      </section>
+
+      <section id="yao">
+        <h2>4. From deterministic average-case to randomized worst-case</h2>
+        <div class="note-box"><p class="note-title">Yao’s minimax principle <span>(query form)</span></p><p>To lower-bound the worst-case cost of bounded-error randomized algorithms, it suffices to exhibit a distribution μ over inputs such that every deterministic algorithm with smaller cost has error greater than 1/3 on an input drawn from μ.</p></div>
+        <p>Our random-secret, random-label distribution is μ. The collision calculation shows that any deterministic <em>q</em>-query algorithm with <em>q</em> = o(2<sup>n/2</sup>) has average success far below 2/3. Yao’s principle then gives the same asymptotic lower bound for worst-case randomized query complexity.</p>
+        <div class="note-box connection"><p class="note-title">Connection: probabilistic time complexity</p><p>This is the same quantifier discipline used for BPP: one randomized machine must have bounded error on every input. Choosing a random input distribution is a proof technique for a lower bound; it does not weaken the final worst-case guarantee.</p></div>
+      </section>
+
+      <section id="upper">
+        <h2>5. The matching birthday upper bound</h2>
+        <p>A classical randomized algorithm samples <em>q</em> distinct inputs uniformly, stores their output labels, and stops when two outputs match. A collision yields <em>s</em> immediately by XORing the corresponding inputs.</p>
+        <p>For a fixed secret, the domain is a perfect matching of <em>N</em> points. The probability that a uniformly random <em>q</em>-subset contains no complete matched pair is</p>
+        <div class="math">Pr[no collision] = [2<sup>q</sup> · C(N/2,q)] / C(N,q), &nbsp; q ≤ N/2.</div>
+        <p>When <em>q</em> = Θ(√<em>N</em>), collision probability is bounded below by a positive constant. Repeating a constant number of times reaches success at least 2/3. This matches the lower bound.</p>
+      </section>
+
+      <section id="simulator">
+        <h2>6. See the birthday threshold</h2>
+        <div class="interactive" id="birthday-lab" aria-labelledby="birthday-title">
+          <div class="interactive-header"><h3 id="birthday-title">Collision threshold simulator</h3><span class="interactive-tag">500 trials</span></div>
+          <div class="control-grid">
+            <div><label class="control-label" for="birthday-n"><span>Input length n</span><output id="birthday-n-value"></output></label><input id="birthday-n" type="range" min="6" max="16" value="12"></div>
+            <div><label class="control-label" for="birthday-q"><span>Distinct queries q</span><output id="birthday-q-value"></output></label><input id="birthday-q" type="range" min="2" max="256" value="64"></div>
+          </div>
+          <div class="chart">
+            <div class="chart-row"><span>Exact</span><div class="chart-track"><div class="chart-fill" id="birthday-exact-bar"></div></div><span class="chart-value" id="birthday-exact-value"></span></div>
+            <div class="chart-row"><span>Empirical</span><div class="chart-track"><div class="chart-fill" id="birthday-empirical-bar"></div></div><span class="chart-value" id="birthday-empirical-value"></span></div>
+            <div class="chart-row"><span>Union bound</span><div class="chart-track"><div class="chart-fill bound" id="birthday-bound-bar"></div></div><span class="chart-value" id="birthday-bound-value"></span></div>
+          </div>
+          <div class="lab-buttons"><button type="button" id="run-birthday">Run 500 trials</button></div>
+          <p class="interactive-caption">The union bound is an upper bound, not a prediction. The exact curve uses the perfect-matching structure of a Simon function.</p>
+        </div>
+      </section>
+
+      <section id="connections">
+        <h2>7. Connections to other lower-bound methods</h2>
+        <div class="connection-grid">
+          <div class="connection-card"><h3>Communication complexity</h3><p>Both models reason from a restricted transcript. In communication complexity the scarce resource is exchanged bits; here it is oracle answers. Rectangle arguments do not directly prove this query bound, but the information-bottleneck viewpoint is shared.</p></div>
+          <div class="connection-card"><h3>Time hierarchy</h3><p>A hierarchy theorem separates two time bounds within one machine model. Simon separates two access models on one promise problem. Both require an upper bound and an adversarial lower bound, but the conclusions are logically different.</p></div>
+          <div class="connection-card"><h3>Randomized algorithms</h3><p>Repeated sampling, birthday phenomena, and error reduction are classical tools. The surprise is not that quantum measurement is random; it is that each quantum sample comes from s⊥ rather than from isolated function values.</p></div>
+          <div class="connection-card"><h3>Adversary thinking</h3><p>Before a collision, an adversary can keep many hidden shifts consistent with the transcript. This “maintain indistinguishable worlds” pattern recurs throughout complexity lower bounds.</p></div>
+        </div>
+      </section>
+
+      <nav class="lesson-nav" aria-label="Lesson navigation"><a href="correctness.html"><small>Previous chapter</small>Correctness &amp; Analysis</a><a href="implications.html"><small>Next chapter</small>Implications &amp; Limitations</a></nav>
+    </article>
+  </main>
+  <footer class="site-footer"><p><strong>Simon’s Algorithm &amp; Quantum Speedups</strong><br>15-455 Undergraduate Complexity Theory</p><p>Chapter 07 · Lower Bound</p></footer><script src="lesson.js"></script>
+</body>
+</html>

@@ -95,3 +95,268 @@ document.querySelectorAll('[data-reveal]').forEach(button => {
     button.textContent = answer.classList.contains('visible') ? 'Hide answer' : 'Reveal answer';
   });
 });
+
+const reversibleOracleLab = document.querySelector('#reversible-oracle-lab');
+if (reversibleOracleLab) {
+  const xInput = document.querySelector('#oracle-x');
+  const yInput = document.querySelector('#oracle-y');
+  const fxOutput = document.querySelector('#oracle-fx');
+  const mappingOutput = document.querySelector('#oracle-mapping');
+
+  function updateOracleMapping() {
+    const x = xInput.value;
+    const y = Number(yInput.value);
+    const fx = [...x].reduce((parity, bit) => parity ^ Number(bit), 0);
+    const target = y ^ fx;
+    fxOutput.textContent = String(fx);
+    mappingOutput.textContent = `|${x}⟩|${y}⟩  ↦  |${x}⟩|${target}⟩`;
+  }
+
+  xInput.addEventListener('change', updateOracleMapping);
+  yInput.addEventListener('change', updateOracleMapping);
+  updateOracleMapping();
+}
+
+const promiseLab = document.querySelector('#promise-lab');
+if (promiseLab) {
+  const secretInput = document.querySelector('#promise-secret');
+  const pairOutput = document.querySelector('#promise-pairs');
+  const secretEcho = document.querySelector('#promise-secret-echo');
+  const colors = ['#8e1616', '#245a73', '#8b6a24', '#5d4777'];
+
+  function bits(value, width = 3) {
+    return value.toString(2).padStart(width, '0');
+  }
+
+  function renderPromisePairs() {
+    const secret = parseInt(secretInput.value, 2);
+    const seen = new Set();
+    const pairs = [];
+    for (let x = 0; x < 8; x += 1) {
+      if (seen.has(x)) continue;
+      const partner = x ^ secret;
+      seen.add(x);
+      seen.add(partner);
+      pairs.push([x, partner]);
+    }
+    secretEcho.textContent = bits(secret);
+    pairOutput.innerHTML = pairs.map((pair, index) => (
+      `<div class="pair-card" style="--pair-color:${colors[index]}"><strong>output ${String.fromCharCode(65 + index)}</strong><span class="binary">f(${bits(pair[0])}) = f(${bits(pair[1])})</span></div>`
+    )).join('');
+  }
+
+  secretInput.addEventListener('change', renderPromisePairs);
+  renderPromisePairs();
+}
+
+const algorithmStepper = document.querySelector('#algorithm-stepper');
+if (algorithmStepper) {
+  const title = document.querySelector('#algorithm-step-title');
+  const formula = document.querySelector('#algorithm-step-formula');
+  const copy = document.querySelector('#algorithm-step-copy');
+  const back = document.querySelector('#step-back');
+  const next = document.querySelector('#step-next');
+  const buttons = [...algorithmStepper.querySelectorAll('[data-algorithm-step]')];
+  const steps = [
+    {
+      title: 'Initialize two registers',
+      formula: '|0ⁿ⟩|0ⁿ⟩',
+      copy: 'The first register will hold queries. The second is the oracle target. No information about s is present yet.'
+    },
+    {
+      title: 'Create a uniform superposition',
+      formula: '2⁻ⁿᐟ² ∑ₓ |x⟩|0ⁿ⟩',
+      copy: 'Applying H⊗ⁿ to the first register gives equal amplitude to every x. This is preparation—not yet a speedup.'
+    },
+    {
+      title: 'Make one coherent oracle query',
+      formula: '2⁻ⁿᐟ² ∑ₓ |x⟩|f(x)⟩',
+      copy: 'The registers are now correlated. Inputs x and x ⊕ s share the same value in the second register.'
+    },
+    {
+      title: 'Isolate one hidden pair',
+      formula: '(|011⟩ + |110⟩)/√2',
+      copy: 'For the example secret s = 101, measuring an output may leave the first register in a coset state. The particular representative is random and irrelevant.'
+    },
+    {
+      title: 'Interfere the pair',
+      formula: '2⁻⁽ⁿ⁺¹⁾ᐟ² ∑𝓏 (−1)ˣ·𝓏[1 + (−1)ˢ·𝓏]|z⟩',
+      copy: 'The bracket is 0 when s · z = 1 and 2 when s · z = 0. Destructive interference removes exactly the non-orthogonal outcomes.'
+    },
+    {
+      title: 'Measure a linear equation',
+      formula: 'z · s = 0  over 𝔽₂',
+      copy: 'One run returns a uniformly random z in s⊥. Repeating the circuit collects enough independent equations to determine s.'
+    }
+  ];
+  let currentStep = 0;
+
+  function renderAlgorithmStep() {
+    const step = steps[currentStep];
+    title.textContent = step.title;
+    formula.textContent = step.formula;
+    copy.textContent = step.copy;
+    buttons.forEach((button, index) => {
+      button.classList.toggle('active', index === currentStep);
+      button.setAttribute('aria-current', index === currentStep ? 'step' : 'false');
+    });
+    back.disabled = currentStep === 0;
+    next.disabled = currentStep === steps.length - 1;
+  }
+
+  buttons.forEach((button, index) => button.addEventListener('click', () => {
+    currentStep = index;
+    renderAlgorithmStep();
+  }));
+  back.addEventListener('click', () => { currentStep = Math.max(0, currentStep - 1); renderAlgorithmStep(); });
+  next.addEventListener('click', () => { currentStep = Math.min(steps.length - 1, currentStep + 1); renderAlgorithmStep(); });
+  renderAlgorithmStep();
+}
+
+const rankLab = document.querySelector('#rank-lab');
+if (rankLab) {
+  const rowsOutput = document.querySelector('#rank-rows');
+  const rankOutput = document.querySelector('#rank-value');
+  const rankBar = document.querySelector('#rank-bar');
+  const candidateOutput = document.querySelector('#rank-candidate');
+  const sampleButton = document.querySelector('#sample-equation');
+  const resetButton = document.querySelector('#reset-equations');
+  const n = 4;
+  const secret = 0b1011;
+  let rows = [];
+
+  const parity = value => {
+    let result = 0;
+    let v = value;
+    while (v) { result ^= (v & 1); v >>= 1; }
+    return result;
+  };
+  const bitString = value => value.toString(2).padStart(n, '0');
+
+  function gf2Rank(values) {
+    const basis = Array(n).fill(0);
+    let rank = 0;
+    values.forEach(original => {
+      let value = original;
+      for (let bit = n - 1; bit >= 0; bit -= 1) {
+        if (((value >> bit) & 1) === 0) continue;
+        if (basis[bit]) value ^= basis[bit];
+        else { basis[bit] = value; rank += 1; break; }
+      }
+    });
+    return rank;
+  }
+
+  function candidates() {
+    const result = [];
+    for (let value = 1; value < 2 ** n; value += 1) {
+      if (rows.every(row => parity(row.value & value) === 0)) result.push(value);
+    }
+    return result;
+  }
+
+  function renderRankLab() {
+    const rank = gf2Rank(rows.map(row => row.value));
+    rowsOutput.innerHTML = rows.length ? rows.map((row, index) => (
+      `<div class="equation-row${row.independent ? '' : ' dependent'}"><span>${bitString(row.value)} · s = 0</span><span>${row.independent ? `independent ${index + 1}` : 'dependent'}</span></div>`
+    )).join('') : '<p class="interactive-caption">No samples yet. Draw equations from the subspace s⊥.</p>';
+    rankOutput.textContent = `${rank} / ${n - 1}`;
+    rankBar.style.width = `${(rank / (n - 1)) * 100}%`;
+    const possible = candidates();
+    candidateOutput.textContent = rank === n - 1
+      ? `Unique nonzero solution: s = ${bitString(possible[0])}`
+      : `${possible.length} nonzero candidates remain.`;
+  }
+
+  sampleButton.addEventListener('click', () => {
+    const valid = [];
+    for (let z = 0; z < 2 ** n; z += 1) if (parity(z & secret) === 0) valid.push(z);
+    const value = valid[Math.floor(Math.random() * valid.length)];
+    const before = gf2Rank(rows.map(row => row.value));
+    const after = gf2Rank([...rows.map(row => row.value), value]);
+    rows.push({ value, independent: after > before });
+    renderRankLab();
+  });
+  resetButton.addEventListener('click', () => { rows = []; renderRankLab(); });
+  renderRankLab();
+}
+
+const birthdayLab = document.querySelector('#birthday-lab');
+if (birthdayLab) {
+  const nInput = document.querySelector('#birthday-n');
+  const qInput = document.querySelector('#birthday-q');
+  const nValue = document.querySelector('#birthday-n-value');
+  const qValue = document.querySelector('#birthday-q-value');
+  const exactBar = document.querySelector('#birthday-exact-bar');
+  const empiricalBar = document.querySelector('#birthday-empirical-bar');
+  const boundBar = document.querySelector('#birthday-bound-bar');
+  const exactValue = document.querySelector('#birthday-exact-value');
+  const empiricalValue = document.querySelector('#birthday-empirical-value');
+  const boundValue = document.querySelector('#birthday-bound-value');
+  const runButton = document.querySelector('#run-birthday');
+
+  const logChoose = (n, k) => {
+    if (k < 0 || k > n) return -Infinity;
+    let total = 0;
+    const r = Math.min(k, n - k);
+    for (let i = 1; i <= r; i += 1) total += Math.log(n - r + i) - Math.log(i);
+    return total;
+  };
+
+  function exactCollisionProbability(n, q) {
+    const size = 2 ** n;
+    if (q > size / 2) return 1;
+    const logNoCollision = logChoose(size / 2, q) + q * Math.log(2) - logChoose(size, q);
+    return 1 - Math.exp(logNoCollision);
+  }
+
+  function simulate(n, q, trials = 500) {
+    const size = 2 ** n;
+    let collisions = 0;
+    for (let trial = 0; trial < trials; trial += 1) {
+      const secret = 1 + Math.floor(Math.random() * (size - 1));
+      const chosen = new Set();
+      let collided = false;
+      while (chosen.size < q && !collided) {
+        const x = Math.floor(Math.random() * size);
+        if (chosen.has(x)) continue;
+        if (chosen.has(x ^ secret)) collided = true;
+        chosen.add(x);
+      }
+      if (collided) collisions += 1;
+    }
+    return collisions / trials;
+  }
+
+  function renderBirthdayLab(runSimulation = false) {
+    const n = Number(nInput.value);
+    const size = 2 ** n;
+    qInput.max = String(Math.min(256, size / 2));
+    if (Number(qInput.value) > Number(qInput.max)) qInput.value = qInput.max;
+    const q = Number(qInput.value);
+    const exact = exactCollisionProbability(n, q);
+    const bound = Math.min(1, (q * (q - 1)) / (2 * (size - 1)));
+    const empirical = runSimulation ? simulate(n, q) : exact;
+    nValue.textContent = n;
+    qValue.textContent = q;
+    exactBar.style.width = `${exact * 100}%`;
+    empiricalBar.style.width = `${empirical * 100}%`;
+    boundBar.style.width = `${bound * 100}%`;
+    exactValue.textContent = `${(exact * 100).toFixed(1)}%`;
+    empiricalValue.textContent = `${(empirical * 100).toFixed(1)}%`;
+    boundValue.textContent = `${(bound * 100).toFixed(1)}%`;
+  }
+
+  nInput.addEventListener('input', () => renderBirthdayLab(false));
+  qInput.addEventListener('input', () => renderBirthdayLab(false));
+  runButton.addEventListener('click', () => renderBirthdayLab(true));
+  renderBirthdayLab(false);
+}
+
+document.querySelectorAll('.claim-card button').forEach(button => {
+  button.addEventListener('click', () => {
+    const card = button.closest('.claim-card');
+    card.classList.toggle('revealed');
+    button.textContent = card.classList.contains('revealed') ? 'Hide analysis' : 'Check claim';
+  });
+});

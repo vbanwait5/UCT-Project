@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A step-by-step derivation of Simon's quantum algorithm.">
+  <title>05 · Simon’s Algorithm</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a class="active" href="algorithm.html" aria-current="page">05 · Algorithm</a><a href="correctness.html">06</a><a href="lower-bound.html">07</a><a href="implications.html">08</a></nav></header>
+
+  <main class="reading-shell">
+    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#overview">Algorithm overview</a></li><li><a href="#prepare">Prepare and query</a></li><li><a href="#coset-state">The coset state</a></li><li><a href="#interfere">Hadamard interference</a></li><li><a href="#repeat">Repeat and solve</a></li><li><a href="#stepper">Walk through it</a></li></ol></aside>
+
+    <article class="lesson-content">
+      <header class="chapter-header"><p class="chapter-kicker">Chapter 05</p><h1>Simon’s Algorithm</h1><p class="chapter-summary">One coherent query produces no readable list of values. Instead, a Hadamard transform converts the oracle’s hidden XOR symmetry into a uniformly random linear constraint.</p><div class="chapter-meta"><span>Quantum algorithm</span><span>25–30 minute read</span><span>Includes state stepper</span></div></header>
+
+      <section id="overview">
+        <h2>1. The algorithm at one level of abstraction</h2>
+        <p>Assume oracle access to a Simon function with hidden nonzero <em>s</em> ∈ 𝔽<sub>2</sub><sup>n</sup>. A single <strong>sampling round</strong> is:</p>
+        <ol>
+          <li>Initialize two <em>n</em>-qubit registers to |0<sup>n</sup>⟩|0<sup>n</sup>⟩.</li>
+          <li>Apply H<sup>⊗<em>n</em></sup> to the first register.</li>
+          <li>Apply the oracle U<sub>f</sub>.</li>
+          <li>Ignore or measure the second register.</li>
+          <li>Apply H<sup>⊗<em>n</em></sup> to the first register and measure it, obtaining <em>z</em>.</li>
+        </ol>
+        <p>The invariant is that every returned <em>z</em> satisfies <em>z</em> · <em>s</em> = 0 over 𝔽<sub>2</sub>. Repeating the round produces a homogeneous linear system whose one-dimensional nullspace is span{<em>s</em>}.</p>
+        <div class="note-box"><p class="note-title">Algorithm 1 <span>(Simon sampling)</span></p><p><strong>repeat</strong> until the sampled equations have rank <em>n</em>−1: run the quantum sampling round and append the measured row <em>z</em>. Then compute the unique nonzero vector in the nullspace over 𝔽<sub>2</sub>.</p></div>
+      </section>
+
+      <section id="prepare">
+        <h2>2. Prepare and query</h2>
+        <p>The initial state is |0<sup>n</sup>⟩|0<sup>n</sup>⟩. Applying a Hadamard to every qubit of the first register gives</p>
+        <div class="math">|ψ<span class="sub">1</span>⟩ = 1/√(2<sup>n</sup>) ∑<span class="sub">x∈𝔽₂ⁿ</span> |x⟩|0<sup>n</sup>⟩.</div>
+        <p>The oracle then acts once:</p>
+        <div class="math">|ψ<span class="sub">2</span>⟩ = 1/√(2<sup>n</sup>) ∑<span class="sub">x∈𝔽₂ⁿ</span> |x⟩|f(x)⟩.</div>
+        <p>This state correlates every input with its output. Because f(<em>x</em>) = f(<em>x</em> ⊕ <em>s</em>), each output label is attached to exactly two first-register basis states.</p>
+        <div class="note-box remark"><p class="note-title">Important <span>(Superposition is not the conclusion)</span></p><p>At this point, measuring both registers would reveal one ordinary pair (<em>x</em>, f(<em>x</em>)) and waste the structure. The useful step is to erase which-pair information while preserving coherence between the two members of a fiber.</p></div>
+      </section>
+
+      <section id="coset-state">
+        <h2>3. Isolating a coset state</h2>
+        <p>Suppose the second register is measured and the outcome is f(<em>x</em><span class="sub">0</span>). Exactly two terms are consistent with this result. The first register becomes</p>
+        <div class="math">|C<span class="sub">x₀</span>⟩ = (|x<span class="sub">0</span>⟩ + |x<span class="sub">0</span> ⊕ s⟩)/√2.</div>
+        <p>This is the uniform superposition over the coset <em>x</em><span class="sub">0</span> + <em>H</em>. The representative <em>x</em><span class="sub">0</span> is random. Crucially, the relative displacement <em>s</em> is the same in every possible coset.</p>
+        <div class="note-box"><p class="note-title">Deep insight <span>(The output measurement is optional)</span></p><p>We may discard the second register without measuring it. The first register is then a classical mixture of coset states, and every coset yields the same final distribution on z. Measuring the output is a proof device, not a required source of computational power.</p></div>
+      </section>
+
+      <section id="interfere">
+        <h2>4. Interference exposes orthogonality</h2>
+        <p>Apply H<sup>⊗<em>n</em></sup> to the coset state. Using H<sup>⊗<em>n</em></sup>|<em>x</em>⟩ = 2<sup>−<em>n</em>/2</sup>∑<sub>z</sub>(−1)<sup><em>x</em>·<em>z</em></sup>|<em>z</em>⟩, we obtain</p>
+        <div class="math">1/√(2<sup>n+1</sup>) ∑<span class="sub">z</span> (−1)<sup>x₀·z</sup>[1 + (−1)<sup>s·z</sup>]|z⟩.</div>
+        <p>If <em>s</em> · <em>z</em> = 1, the bracket is 1 − 1 = 0: the amplitude cancels. If <em>s</em> · <em>z</em> = 0, the bracket is 2: the paths reinforce. Therefore only vectors in the orthogonal subspace</p>
+        <div class="math">s<sup>⊥</sup> = {z ∈ 𝔽<span class="sub">2</span><sup>n</sup> : z · s = 0}</div>
+        <p>can be measured. The phase (−1)<sup><em>x</em><span class="sub">0</span>·<em>z</em></sup> depends on the random coset representative, but its squared magnitude is one, so it does not affect the measurement distribution.</p>
+      </section>
+
+      <section id="repeat">
+        <h2>5. Repeat and solve over 𝔽₂</h2>
+        <p>Each run outputs a uniformly random row <em>z</em> in the (<em>n</em>−1)-dimensional subspace <em>s</em><sup>⊥</sup>. Stack the samples into a matrix <em>Z</em>. We seek a nonzero solution to</p>
+        <div class="math">Zs = 0 &nbsp; over 𝔽<span class="sub">2</span>.</div>
+        <p>Once rank(<em>Z</em>) = <em>n</em>−1, its nullspace has dimension one. Since the true <em>s</em> lies in the nullspace, the only nonzero solution is <em>s</em>. Gaussian elimination uses XOR in place of subtraction.</p>
+        <div class="note-box connection"><p class="note-title">Connection: randomized computation</p><p>The quantum circuit is randomized only at measurement. Correctness is one-sided at the equation level: a sampled row never violates z · s = 0. Failure occurs because the rows may be linearly dependent, and repetition reduces that failure probability exponentially.</p></div>
+      </section>
+
+      <section id="stepper">
+        <h2>6. Walk through the state changes</h2>
+        <div class="interactive" id="algorithm-stepper" aria-labelledby="stepper-title">
+          <div class="interactive-header"><h3 id="stepper-title">Algorithm state stepper</h3><span class="interactive-tag">Example s = 101</span></div>
+          <div class="stepper-layout">
+            <ol class="step-list"><li><button type="button" data-algorithm-step>Initialize</button></li><li><button type="button" data-algorithm-step>Hadamards</button></li><li><button type="button" data-algorithm-step>Oracle</button></li><li><button type="button" data-algorithm-step>Coset</button></li><li><button type="button" data-algorithm-step>Interfere</button></li><li><button type="button" data-algorithm-step>Measure</button></li></ol>
+            <div class="step-panel"><h4 id="algorithm-step-title"></h4><div class="math" id="algorithm-step-formula"></div><p id="algorithm-step-copy"></p><div class="step-controls"><button type="button" id="step-back">Previous</button><button type="button" id="step-next">Next</button></div></div>
+          </div>
+        </div>
+        <div class="note-box"><p class="note-title">Takeaway</p><p>The oracle creates a two-point periodic state; the Hadamard transform maps translation symmetry in the primal space to orthogonality constraints in the dual space. The algorithm learns s indirectly by sampling s⊥.</p></div>
+      </section>
+
+      <nav class="lesson-nav" aria-label="Lesson navigation"><a href="problem.html"><small>Previous chapter</small>Simon’s Problem</a><a href="correctness.html"><small>Next chapter</small>Correctness &amp; Analysis</a></nav>
+    </article>
+  </main>
+  <footer class="site-footer"><p><strong>Simon’s Algorithm &amp; Quantum Speedups</strong><br>15-455 Undergraduate Complexity Theory</p><p>Chapter 05 · Algorithm</p></footer><script src="lesson.js"></script>
+</body>
+</html>
