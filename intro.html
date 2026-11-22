@@ -134,7 +134,7 @@
         <h2>5. The road to Simon’s algorithm</h2>
         <div class="note-box">
           <p class="note-title">Definition 6 <span>(Promise problem)</span></p>
-          <p>A promise problem is a pair Π = (Π<span class="sub">yes</span>, Π<span class="sub">no</span>) of disjoint sets. An algorithm must accept every input in Π<span class="sub">yes</span> and reject every input in Π<span class="sub">no</span>; its behavior outside Π<span class="sub">yes</span> ∪ Π<span class="sub">no</span> is unrestricted. A search promise problem similarly requires a valid output only on promised inputs.</p>
+          <p>A promise problem is a pair (<em>L</em><span class="sub">YES</span>, <em>L</em><span class="sub">NO</span>) of disjoint languages. An algorithm must accept every input in <em>L</em><span class="sub">YES</span> and reject every input in <em>L</em><span class="sub">NO</span>; its behavior outside <em>L</em><span class="sub">YES</span> ∪ <em>L</em><span class="sub">NO</span> is unrestricted. A search promise problem similarly requires a valid output only on promised inputs.</p>
         </div>
 
         <p>We can now preview the problem that will occupy the rest of the course. <strong>Simon’s problem</strong> is a search promise problem: we receive oracle access to <em>f</em> : {0,1}<sup>n</sup> → {0,1}<sup>n</sup> and are promised that there is a unique nonzero <em>s</em> ∈ {0,1}<sup>n</sup> such that, for all <em>x</em>, <em>y</em> ∈ {0,1}<sup>n</sup>,</p>
