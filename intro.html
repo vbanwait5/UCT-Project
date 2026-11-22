@@ -58,7 +58,7 @@
       <section id="computation-model">
         <h2>2. Computation begins with a model</h2>
         <p>Every complexity claim is relative to a model of computation. Classical complexity theory may use Turing machines, RAM machines, or uniform Boolean circuits; for polynomial-time questions these standard models are interchangeable up to polynomial overhead. The model still matters, however, because it tells us which operations count as elementary.</p>
-        <p>We will use the <strong>uniform quantum circuit model</strong>. For each input length <em>n</em>, a classical polynomial-time procedure produces a finite circuit <em>C</em><span class="sub">n</span>. That circuit acts on the input and on polynomially many auxiliary qubits initialized to |0⟩, applies gates from a fixed finite universal set, and finally measures designated output qubits in the computational basis.</p>
+        <p>We will use the <strong>uniform quantum circuit model</strong>. On unary input 1<sup><em>n</em></sup>, a classical polynomial-time procedure produces a finite circuit <em>C</em><span class="sub">n</span>. That circuit acts on <em>n</em> input qubits and polynomially many auxiliary qubits initialized to |0⟩, applies gates from a fixed finite universal set, and finally measures designated output qubits in the computational basis.</p>
 
         <div class="note-box">
           <p class="note-title">Definition 1 <span>(Quantum circuit, informal)</span></p>
