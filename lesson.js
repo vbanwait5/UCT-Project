@@ -11,30 +11,6 @@ function updateReadingProgress() {
 window.addEventListener('scroll', updateReadingProgress, { passive: true });
 updateReadingProgress();
 
-const sizeSlider = document.querySelector('#input-size');
-if (sizeSlider) {
-  const nOutput = document.querySelector('#n-output');
-  const quantumBar = document.querySelector('#quantum-bar');
-  const classicalBar = document.querySelector('#classical-bar');
-  const quantumValue = document.querySelector('#quantum-value');
-  const classicalValue = document.querySelector('#classical-value');
-
-  function updateRace() {
-    const n = Number(sizeSlider.value);
-    const quantum = n;
-    const classical = Math.ceil(2 ** (n / 2));
-    const max = classical;
-    nOutput.textContent = n;
-    quantumValue.textContent = `≈ ${quantum}`;
-    classicalValue.textContent = `≈ ${classical.toLocaleString()}`;
-    quantumBar.style.width = `${Math.max(1.5, (quantum / max) * 100)}%`;
-    classicalBar.style.width = '100%';
-  }
-
-  sizeSlider.addEventListener('input', updateRace);
-  updateRace();
-}
-
 const stateLab = document.querySelector('#state-lab');
 if (stateLab) {
   let alpha = 1;

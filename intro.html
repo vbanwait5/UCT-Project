@@ -123,20 +123,6 @@
         </ul>
         <p>The qualifiers matter. “Quantum is faster” is incomplete unless we name the problem, computational models, resource, and error guarantee. A query separation does not by itself imply an end-to-end runtime separation.</p>
 
-        <div class="interactive" aria-labelledby="race-title">
-          <div class="interactive-header">
-            <h3 id="race-title">Query-growth microscope</h3>
-            <span class="interactive-tag">Interactive estimate</span>
-          </div>
-          <label class="control-label" for="input-size"><span>Input length, n</span><output id="n-output">12</output></label>
-          <input id="input-size" type="range" min="4" max="30" value="12" step="1">
-          <div class="race-bars">
-            <div class="race-row"><span>Quantum O(n)</span><div class="bar-track"><div class="bar" id="quantum-bar"></div></div><span class="race-value" id="quantum-value"></span></div>
-            <div class="race-row"><span>Classical Ω(2ⁿᐟ²)</span><div class="bar-track"><div class="bar classical" id="classical-bar"></div></div><span class="race-value" id="classical-value"></span></div>
-          </div>
-          <p class="interactive-caption">This visualization compares representative growth rates from Simon’s query separation; it is not a runtime benchmark. Move the slider to see how quickly an exponential gap dominates a linear one.</p>
-        </div>
-
         <div class="note-box question">
           <p class="note-title">Guiding Question</p>
           <p>If oracle queries are not the only operations an algorithm performs, why is a query separation still meaningful?</p>
