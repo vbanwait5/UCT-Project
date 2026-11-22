@@ -2,26 +2,26 @@
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="The randomized classical query lower bound for Simon's problem."><title>07 · Classical Randomized Lower Bound</title><link rel="stylesheet" href="styles.css"></head>
 <body>
-  <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a href="correctness.html">06</a><a class="active" href="lower-bound.html" aria-current="page">07 · Lower bound</a><a href="implications.html">08</a></nav></header>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>15-455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a href="correctness.html">06</a><a class="active" href="lower-bound.html" aria-current="page">07 · Lower bound</a><a href="implications.html">08</a></nav></header>
   <main class="reading-shell">
-    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#goal">Lower-bound goal</a></li><li><a href="#distribution">Hard distribution</a></li><li><a href="#collision">Collision lemma</a></li><li><a href="#yao">Yao’s principle</a></li><li><a href="#upper">Matching upper bound</a></li><li><a href="#simulator">Birthday simulator</a></li><li><a href="#connections">CS455 connections</a></li></ol></aside>
+    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#goal">Lower-bound goal</a></li><li><a href="#distribution">Hard distribution</a></li><li><a href="#collision">Collision lemma</a></li><li><a href="#yao">Yao’s principle</a></li><li><a href="#upper">Matching upper bound</a></li><li><a href="#simulator">Birthday simulator</a></li><li><a href="#connections">15-455 connections</a></li></ol></aside>
     <article class="lesson-content">
-      <header class="chapter-header"><p class="chapter-kicker">Chapter 07</p><h1>Classical Randomized<br>Lower Bound</h1><p class="chapter-summary">We formalize the transcript argument: without a collision, the posterior distribution on the hidden shift remains nearly uniform, forcing the birthday scale 2<sup>n/2</sup>.</p><div class="chapter-meta"><span>Lower-bound proof</span><span>35–40 minute read</span><span>Includes collision simulator</span></div></header>
+      <header class="chapter-header"><p class="chapter-kicker">Chapter 07</p><h1>Classical Randomized<br>Lower Bound</h1><p class="chapter-summary">To establish a speedup, an efficient quantum algorithm is only half of the argument. We now prove that every bounded-error classical randomized algorithm must wait until the birthday scale before its transcript reveals the hidden shift.</p><div class="chapter-meta"><span>Lower-bound proof</span><span>35–40 minute read</span><span>Includes collision simulator</span></div></header>
 
       <section id="goal">
         <h2>1. What must be proved?</h2>
-        <p>An O(<em>n</em>)-query quantum algorithm alone does not establish a speedup. We need a lower bound against <em>every</em> classical randomized algorithm, including adaptive algorithms whose next query depends on all previous answers.</p>
+        <p>The O(<em>n</em>)-query quantum upper bound proves that one algorithm is efficient; it does not yet prove a separation. For that, we need a lower bound against <em>every</em> classical randomized algorithm, including adaptive algorithms whose next query may depend on the entire transcript seen so far.</p>
         <div class="note-box"><p class="note-title">Theorem 1 <span>(Classical randomized query complexity)</span></p><p>Every randomized classical algorithm that solves Simon’s search problem with success probability at least 2/3 on every promised oracle makes Ω(2<sup>n/2</sup>) queries in the worst case. Moreover, O(2<sup>n/2</sup>) queries suffice. Hence</p><div class="math">R<span class="sub">1/3</span>(Simon<span class="sub">n</span>) = Θ(2<sup>n/2</sup>).</div></div>
-        <p>The lower bound has two ideas: choose a symmetric distribution over hard inputs, then show that a deterministic algorithm using too few queries has low average success under that distribution.</p>
+        <p>The proof proceeds in two stages. We first choose a symmetric distribution over valid oracles and show that any fixed deterministic algorithm making too few queries has low average success on that distribution. Yao’s principle will then convert this distributional statement into the desired worst-case lower bound for randomized algorithms.</p>
       </section>
 
       <section id="distribution">
         <h2>2. A hard input distribution</h2>
-        <p>Let N=2<sup>n</sup> and M=N−1. Define a distribution μ over promised Simon oracles in two stages:</p>
+        <p>Let N=2<sup>n</sup> and M=N−1. The hard distribution μ should conceal every feature except the collision structure mandated by the promise. We generate an oracle in two stages:</p>
         <ol><li>Choose s uniformly from the M nonzero strings.</li><li>The pairs {x,x⊕s} are the N/2 cosets of {0,s}. Assign distinct output labels to these pairs by a uniformly random injection into {0,1}<sup>n</sup>.</li></ol>
         <p>Now fix an arbitrary deterministic adaptive algorithm A making at most q queries. We may assume its queries are distinct, because repeating an input returns an already-known answer and cannot improve the transcript.</p>
         <div class="note-box"><p class="note-title">Definition 2 <span>(Classical transcript)</span></p><p>After t queries, the transcript is T<sub>t</sub>=((x<sub>1</sub>,f(x<sub>1</sub>)),…, (x<sub>t</sub>,f(x<sub>t</sub>))). It is collision-free if all observed output labels are distinct.</p></div>
-        <p>On a collision-free path, every oracle response is a fresh random label. The actual bit pattern of that label is independent of s; only equality between labels can expose a pair.</p>
+        <p>Along a collision-free path, each response is simply a fresh random label. Its bit pattern is independent of s, so it offers no semantic clue about the hidden shift. Only a repeated label—that is, equality between two answers—can identify one of the promised pairs.</p>
         <div class="note-box remark"><p class="note-title">Remark <span>(The oracle labels are camouflage)</span></p><p>The lower bound randomizes labels to prevent the algorithm from exploiting their representation. The only invariant information is whether two answers are equal.</p></div>
       </section>
 
@@ -29,7 +29,7 @@
         <h2>3. The collision probability lemma</h2>
         <p>For a set Q={x<sub>1</sub>,…,x<sub>q</sub>} of queried inputs, define its nonzero difference set</p>
         <div class="math">D(Q) = {x<span class="sub">i</span>⊕x<span class="sub">j</span> : 1≤i&lt;j≤q}.</div>
-        <p>There are at most C=q(q−1)/2 elements in D(Q). A collision appears exactly when s∈D(Q).</p>
+        <p>There are at most C=q(q−1)/2 such pairwise differences. The definition is useful because a collision appears exactly when the hidden shift belongs to D(Q): two queried points collide precisely when their XOR equals s.</p>
 
         <div class="note-box"><p class="note-title">Lemma 3 <span>(Posterior after a collision-free transcript)</span></p><p>Conditioned on a particular collision-free transcript with query set Q, the secret s is uniform over the set</p><div class="math">S(Q)=({0,1}<sup>n</sup> ∖ {0}) ∖ D(Q).</div><p>Consequently, any deterministic guess succeeds with conditional probability at most 1/(M−|D(Q)|) ≤ 1/(M−C).</p></div>
         <p><strong>Proof.</strong> A candidate s is inconsistent with the transcript exactly when some queried pair differs by s, because that pair should have received equal labels. Thus the consistent secrets are precisely S(Q). For every s∈S(Q), all q queried points lie in distinct s-cosets. The number of injective assignments of the observed q distinct labels to those cosets is the same for every such s. Since the prior on s was uniform, Bayes’ rule leaves a uniform posterior on S(Q). ∎</p>
@@ -39,27 +39,27 @@
 
         <div class="note-box"><p class="note-title">Proposition 5 <span>(Average success bound)</span></p><p>Assume C=q(q−1)/2&lt;M. Every deterministic adaptive q-query algorithm has success probability under μ at most</p><div class="math">C/M + 1/(M−C).</div></div>
         <p><strong>Proof.</strong> Split on whether a collision occurs. The success contribution of collision transcripts is at most their total probability, bounded by C/M in Lemma 4. On a collision-free transcript, Lemma 3 bounds the best possible guess by 1/(M−C). Adding the two contributions proves the claim. ∎</p>
-        <p>For example, if q≤√M/4, then C≤M/32. For n≥3, the displayed success bound is strictly below 2/3. Therefore constant success requires q=Ω(√M)=Ω(2<sup>n/2</sup>).</p>
+        <p>We can now read the asymptotics directly. If q≤√M/4, then C≤M/32; for n≥3 the resulting success bound is strictly below 2/3. Hence no deterministic algorithm under μ achieves constant success with q=o(√M), and the critical scale is Ω(√M)=Ω(2<sup>n/2</sup>).</p>
       </section>
 
       <section id="yao">
         <h2>4. From deterministic average-case to randomized worst-case</h2>
         <div class="note-box"><p class="note-title">Yao’s minimax principle <span>(query form)</span></p><p>To lower-bound the worst-case cost of bounded-error randomized algorithms, it suffices to exhibit a distribution μ over inputs such that every deterministic algorithm with smaller cost has error greater than 1/3 on an input drawn from μ.</p></div>
-        <p><strong>Application.</strong> Suppose for contradiction that a randomized q-query algorithm R succeeds with probability at least 2/3 on every promised oracle, where q=o(2<sup>n/2</sup>). Average first over f∼μ and then over R’s random coins. The resulting average success is still at least 2/3.</p>
+        <p><strong>Application.</strong> Suppose, toward a contradiction, that a randomized q-query algorithm R succeeds with probability at least 2/3 on every promised oracle while q=o(2<sup>n/2</sup>). Averaging first over f∼μ and then over the random coins of R leaves the average success at least 2/3.</p>
         <p>Fixing R’s coins turns it into a deterministic q-query algorithm. Since the average over coin fixings is at least 2/3, at least one fixing must have average success at least 2/3 on μ. Proposition 5 says every such deterministic algorithm has success below 2/3 for q=o(2<sup>n/2</sup>), a contradiction. Therefore R<sub>1/3</sub>(Simon<sub>n</sub>)=Ω(2<sup>n/2</sup>).</p>
         <div class="note-box connection"><p class="note-title">Connection: probabilistic time complexity</p><p>This is the same quantifier discipline used for BPP: one randomized machine must have bounded error on every input. Choosing a random input distribution is a proof technique for a lower bound; it does not weaken the final worst-case guarantee.</p></div>
       </section>
 
       <section id="upper">
         <h2>5. The matching birthday upper bound</h2>
-        <p>A classical randomized algorithm samples <em>q</em> distinct inputs uniformly, stores their output labels, and stops when two outputs match. A collision yields <em>s</em> immediately by XORing the corresponding inputs.</p>
+        <p>The lower bound is meaningful only if the birthday scale is also achievable. Consider the following classical algorithm: sample <em>q</em> distinct inputs uniformly, store their output labels, and stop when two labels agree. The corresponding inputs then reveal <em>s</em> immediately through their XOR.</p>
         <p>For a fixed secret, the domain is a perfect matching of N points. If i collision-free inputs have already been selected, then i of the N−i remaining points are their forbidden partners. Thus the probability that the next point avoids a collision is (N−2i)/(N−i). Multiplying gives</p>
         <div class="math">Pr[no collision] = ∏<span class="sub">i=0</span><sup>q−1</sup>(N−2i)/(N−i)</div>
         <p>which is equivalently</p>
         <div class="math">Pr[no collision] = [2<sup>q</sup> · C(N/2,q)] / C(N,q), &nbsp; q ≤ N/2.</div>
         <p>Using 1−u≤e<sup>−u</sup>,</p>
         <div class="math">Pr[no collision] ≤ exp(−∑<span class="sub">i=0</span><sup>q−1</sup> i/(N−i)) ≤ exp(−q(q−1)/(2N)).</div>
-        <p>Choosing q≥1+√(2N ln 3) makes this probability at most 1/3, so one run finds a collision and recovers s with probability at least 2/3. Therefore R<sub>1/3</sub>(Simon<sub>n</sub>)=O(√N)=O(2<sup>n/2</sup>), matching the lower bound.</p>
+        <p>Thus q≥1+√(2N ln 3) makes the probability of seeing no collision at most 1/3. With probability at least 2/3, one run finds a collision and recovers s. Consequently R<sub>1/3</sub>(Simon<sub>n</sub>)=O(√N)=O(2<sup>n/2</sup>), which matches the lower bound and pins down the classical query complexity exactly up to constants.</p>
         <div class="note-box"><p class="note-title">Conclusion</p><p>The classical proof is tight: Θ(2<sup>n/2</sup>) queries are both necessary and sufficient. Together with the O(n)-query quantum algorithm, this establishes the exponential separation.</p></div>
       </section>
 

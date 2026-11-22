@@ -2,45 +2,46 @@
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="The implications, class connections, and limitations of Simon's quantum speedup."><title>08 · Implications and Limitations</title><link rel="stylesheet" href="styles.css"></head>
 <body>
-  <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a href="correctness.html">06</a><a href="lower-bound.html">07</a><a class="active" href="implications.html" aria-current="page">08 · Limits</a></nav></header>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>15-455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a href="correctness.html">06</a><a href="lower-bound.html">07</a><a class="active" href="implications.html" aria-current="page">08 · Limits</a></nav></header>
   <main class="reading-shell">
     <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#proved">What was proved</a></li><li><a href="#bqp">From queries to BQP</a></li><li><a href="#relativization">Oracle evidence</a></li><li><a href="#hsp">Hidden subgroups</a></li><li><a href="#limits">What it does not show</a></li><li><a href="#claims">Check the claims</a></li><li><a href="#map">Course connections</a></li><li><a href="#sources">Sources</a></li></ol></aside>
     <article class="lesson-content">
-      <header class="chapter-header"><p class="chapter-kicker">Chapter 08</p><h1>Implications &amp;<br>Limitations</h1><p class="chapter-summary">Simon’s algorithm is a landmark because its separation is rigorous and its mechanism generalizes—not because it proves that quantum computers are universally faster.</p><div class="chapter-meta"><span>Capstone</span><span>20–25 minute read</span><span>Includes claim checker</span></div></header>
+      <header class="chapter-header"><p class="chapter-kicker">Chapter 08</p><h1>Implications &amp;<br>Limitations</h1><p class="chapter-summary">We have proved an exponential separation, but every word in that statement has a precise scope. This final chapter places the result in BQP, relativization, and the hidden subgroup framework without claiming more than the proof supports.</p><div class="chapter-meta"><span>Capstone</span><span>20–25 minute read</span><span>Includes claim checker</span></div></header>
 
       <section id="proved">
         <h2>1. The theorem we actually earned</h2>
-        <p>For Simon’s promised oracle search problem, a quantum algorithm uses O(<em>n</em>) coherent queries and polynomial classical postprocessing, while every bounded-error classical randomized query algorithm needs Θ(2<sup><em>n</em>/2</sup>) queries.</p>
+        <p>Let us begin by stating the conclusion at exactly the strength established by the preceding proofs. For Simon’s promised oracle search problem, a quantum algorithm uses O(<em>n</em>) coherent queries and polynomial postprocessing, whereas every bounded-error classical randomized query algorithm requires Θ(2<sup><em>n</em>/2</sup>) queries.</p>
         <div class="math">Q<span class="sub">1/3</span>(Simon<span class="sub">n</span>) = O(n), &nbsp;&nbsp; R<span class="sub">1/3</span>(Simon<span class="sub">n</span>) = Θ(2<sup>n/2</sup>).</div>
-        <p>This is an exponential separation in <strong>query complexity</strong> for a <strong>promise problem</strong> under a specified <strong>quantum oracle model</strong>. Each qualifier marks a boundary of the theorem.</p>
+        <p>This is an exponential separation in <strong>query complexity</strong>, for a <strong>promise problem</strong>, under a specified <strong>quantum oracle model</strong>. None of these qualifiers is cosmetic: each one marks a logical boundary of the theorem and must remain visible when the result is compared with broader complexity classes.</p>
         <div class="note-box"><p class="note-title">Deep insight <span>(The advantage is spectral)</span></p><p>The quantum algorithm never learns many values of f. It learns which linear characters z ↦ (−1)<sup>z·x</sup> are invariant under translation by s. The speedup comes from changing representation—from point values to Fourier structure.</p></div>
       </section>
 
       <section id="bqp">
         <h2>2. BQP and the probabilistic-computation analogy</h2>
         <div class="note-box"><p class="note-title">Definition 1 <span>(BQP)</span></p><p>BQP is the class of languages L for which there is a polynomial-time uniform family of polynomial-size quantum circuits that accepts every x ∈ L with probability at least 2/3 and accepts every x ∉ L with probability at most 1/3.</p></div>
-        <p>BQP is the quantum analogue of BPP. The constants 2/3 and 1/3 are conventional: independent repetition and majority vote reduce error exponentially. Also BPP ⊆ BQP, because a Hadamard gate followed by measurement supplies a fair random bit and reversible quantum gates can simulate classical computation.</p>
+        <p>This definition makes BQP the quantum analogue of BPP. The constants 2/3 and 1/3 are conventional rather than fundamental, since independent repetition followed by majority vote reduces the error exponentially. Moreover BPP ⊆ BQP: a Hadamard gate followed by measurement supplies a fair random bit, and reversible quantum gates can simulate classical computation.</p>
         <p>Simon’s algorithm is a polynomial-time quantum procedure if one assumes efficient coherent access to its oracle. It does not, by itself, exhibit a natural explicit language known to lie outside BPP; whether BPP = BQP remains open.</p>
         <div class="note-box connection"><p class="note-title">Connection: probabilistic time complexity</p><p>The quantifiers in BPP and BQP match: for every input, probability over the machine’s internal choices must give the correct answer with bounded error. Quantum amplitudes change how those probabilities arise, not the worst-case correctness requirement.</p></div>
       </section>
 
       <section id="relativization">
         <h2>3. What the oracle separation means</h2>
-        <p>A complexity class C<sup>A</sup> gives C-machines access to an oracle A. Simon’s construction can be encoded into an oracle relative to which quantum polynomial time solves a task that bounded-error classical polynomial time cannot. Informally:</p>
+        <p>To connect the query separation with class notation, recall that C<sup>A</sup> denotes C-machines equipped with an oracle A. Simon’s construction can be encoded into an oracle relative to which quantum polynomial time solves a task that bounded-error classical polynomial time cannot. Informally,</p>
         <div class="math">there exists an oracle A such that BQP<sup>A</sup> ⊄ BPP<sup>A</sup>.</div>
-        <p>This is strong evidence that coherent access supplies a genuinely different computational resource. It is not an unrelativized proof that BQP ≠ BPP. An oracle may hide exponentially large structured information behind unit-cost queries, and real algorithms must generate or access their structure explicitly.</p>
+        <p>The relativized separation is strong evidence that coherent queries provide a genuinely different computational resource. It is not, however, an unrelativized proof that BQP ≠ BPP. An oracle can place exponentially much structured information behind a unit-cost interface, whereas an ordinary algorithm must also account for how that structure is represented and accessed.</p>
         <div class="note-box connection"><p class="note-title">Connection: relativization</p><p>Oracle results are both evidence and warning labels. They show a separation in every world sharing the chosen oracle interface, while reminding us that techniques treating an oracle as a black box may not resolve unrelativized class separations.</p></div>
       </section>
 
       <section id="hsp">
         <h2>4. The hidden subgroup viewpoint</h2>
-        <p>Simon’s problem is the hidden subgroup problem over the abelian group 𝔽<sub>2</sub><sup>n</sup>. The hidden subgroup is H={0,s}; the oracle is constant on cosets and distinct across cosets; Fourier sampling returns characters trivial on H.</p>
+        <p>The mechanism becomes more general when expressed in group-theoretic language. Simon’s problem is a hidden subgroup problem over the abelian group 𝔽<sub>2</sub><sup>n</sup>: the subgroup is H={0,s}, the oracle is constant on each coset and distinct across different cosets, and Fourier sampling returns characters that are trivial on H.</p>
         <p>This architecture—coset states followed by a Fourier transform—became a central quantum-algorithm pattern. Shor’s factoring and discrete-logarithm algorithms use period finding and quantum Fourier analysis over different abelian groups. Simon’s algorithm is a conceptual ancestor, not a direct black-box reduction from factoring.</p>
         <table class="comparison"><thead><tr><th>Feature</th><th>Simon</th><th>Period finding</th></tr></thead><tbody><tr><td>Ambient group</td><td>𝔽₂ⁿ</td><td>Typically cyclic</td></tr><tr><td>Hidden structure</td><td>Order-two subgroup {0,s}</td><td>Unknown period subgroup</td></tr><tr><td>Transform</td><td>H⊗ⁿ</td><td>Quantum Fourier transform</td></tr><tr><td>Classical recovery</td><td>Linear algebra over 𝔽₂</td><td>Continued fractions / number theory</td></tr></tbody></table>
       </section>
 
       <section id="limits">
-        <h2>5. What Simon’s result does not show</h2>
+        <h2>5. Drawing the boundary carefully</h2>
+        <p>The cleanest way to avoid overstating the result is to list the claims that do not follow from it:</p>
         <ul>
           <li>It does not show that quantum computers speed up every problem.</li>
           <li>It does not prove BQP ≠ BPP, P ≠ NP, or any standard unrelativized class separation.</li>
@@ -64,7 +65,7 @@
       </section>
 
       <section id="map">
-        <h2>7. A map back to CS455</h2>
+        <h2>7. A map back to 15-455</h2>
         <div class="connection-grid">
           <div class="connection-card"><h3>Deterministic &amp; probabilistic time</h3><p>Model, resource bound, error convention, and worst-case quantifiers must all be explicit. Simon compares access models rather than merely presenting two algorithms.</p></div>
           <div class="connection-card"><h3>Boolean circuits</h3><p>Uniform local circuits provide a machine-independent model. Quantum gates add unitarity and interference while preserving the idea of size and depth.</p></div>
@@ -81,7 +82,7 @@
           <li>Daniel R. Simon, <a href="https://epubs.siam.org/doi/10.1137/S0097539796298637">“On the Power of Quantum Computation”</a>, <em>SIAM Journal on Computing</em> 26(5), 1997.</li>
           <li>Ethan Bernstein and Umesh Vazirani, <a href="https://people.eecs.berkeley.edu/~vazirani/pubs/bv.pdf">“Quantum Complexity Theory”</a>, <em>SIAM Journal on Computing</em> 26(5), 1997.</li>
         </ul>
-        <div class="note-box"><p class="note-title">Final takeaway</p><p>Simon’s algorithm is a complete complexity-theoretic case study: define the model, exploit algebraic structure, prove the output distribution, amplify success, and match the algorithm with a lower bound in the competing model.</p></div>
+        <div class="note-box"><p class="note-title">Final takeaway</p><p>Simon’s algorithm is valuable as a complete complexity-theoretic case study. It begins by fixing a model and a resource, exploits algebraic structure to design an algorithm, proves the exact output distribution and its amplification, and then matches the upper bound with a lower bound in the competing model. The proof is compelling precisely because its conclusion is both strong and carefully delimited.</p></div>
       </section>
 
       <nav class="lesson-nav" aria-label="Lesson navigation"><a href="lower-bound.html"><small>Previous chapter</small>Classical Lower Bound</a><a href="index.html"><small>Course complete</small>Return to overview</a></nav>

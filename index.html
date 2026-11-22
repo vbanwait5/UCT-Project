@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="An introduction to quantum computation and the foundations needed to study Simon's algorithm.">
-  <title>Quantum Speedups | CS455</title>
+  <title>Quantum Speedups | 15-455</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Quantum Speedups home">
       <span class="brand-mark" aria-hidden="true">|ψ⟩</span>
-      <span><strong>Quantum Speedups</strong><small>CS455 · UCT Project</small></span>
+      <span><strong>Quantum Speedups</strong><small>15-455 · UCT Project</small></span>
     </a>
     <nav class="site-nav" aria-label="Main navigation">
       <a class="active" href="index.html" aria-current="page">Overview</a>
@@ -24,7 +24,7 @@
       <div class="hero-copy">
         <p class="eyebrow">A short course in quantum query complexity</p>
         <h1>Simon’s Algorithm<br><em>&amp; Quantum Speedups</em></h1>
-        <p class="lede">How can a quantum algorithm learn a hidden pattern using exponentially fewer questions than a classical algorithm? We begin with the computational model, then build the quantum vocabulary needed to answer that question carefully.</p>
+        <p class="lede">How can a quantum algorithm recover a hidden pattern while making exponentially fewer queries than any classical randomized algorithm? To answer that question carefully, we will build the model from first principles, derive the algorithm one state at a time, and prove both sides of the separation.</p>
         <div class="hero-actions">
           <a class="button primary" href="intro.html">Begin with the introduction</a>
           <a class="text-link" href="#course-map">View course map</a>
@@ -54,7 +54,7 @@
         <p class="section-number">Course map</p>
         <h2>An eight-chapter path</h2>
       </div>
-      <p>Build the mathematical model, derive Simon’s algorithm, prove its correctness, and then prove that bounded-error classical algorithms cannot match its query complexity.</p>
+      <p>The chapters form one continuous argument. We first define the mathematical and computational model, then isolate Simon’s hidden-XOR structure, derive the quantum algorithm, and finally prove why bounded-error classical algorithms cannot match its query complexity.</p>
     </section>
 
     <section class="lesson-grid full" aria-label="Course lessons">
@@ -62,22 +62,22 @@
         <span class="lesson-number">01</span>
         <span class="lesson-meta">18–22 min · Formal foundation</span>
         <h3>Introduction to Quantum Computation</h3>
-        <p>Why quantum computation is a different model, what an oracle is, and why query complexity gives us a clean way to compare algorithms.</p>
+        <p>Begin with the question a complexity statement must answer: which model, which resource, and which success guarantee? This chapter introduces quantum circuits, oracles, and query complexity in that order.</p>
         <span class="card-link">Read lesson</span>
       </a>
       <a class="lesson-card available" href="basics.html">
         <span class="lesson-number">02</span>
         <span class="lesson-meta">25–30 min · Mathematical foundations</span>
         <h3>Quantum Computing Basics</h3>
-        <p>Qubits, amplitudes, measurement, phase, interference, multiple-qubit states, and the gates we will use later.</p>
+        <p>Develop the mathematics behind the model: amplitudes and measurement, relative phase and interference, tensor products and entanglement, and the gates used in the algorithm.</p>
         <span class="card-link">Read lesson</span>
       </a>
-      <a class="lesson-card available" href="circuits.html"><span class="lesson-number">03</span><span class="lesson-meta">20–25 min · Circuit model</span><h3>Quantum Circuits &amp; Oracles</h3><p>Local gates, reversible embeddings, coherent queries, phase kickback, and the distinction between query and gate complexity.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="problem.html"><span class="lesson-number">04</span><span class="lesson-meta">18–22 min · Promise structure</span><h3>Simon’s Problem</h3><p>The hidden XOR promise, cosets of {0,s}, fibers, search versus decision, and what a classical transcript reveals.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="algorithm.html"><span class="lesson-number">05</span><span class="lesson-meta">25–30 min · Quantum algorithm</span><h3>Simon’s Algorithm</h3><p>Follow every state transformation and see exactly how interference turns a hidden shift into linear equations.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="correctness.html"><span class="lesson-number">06</span><span class="lesson-meta">35–40 min · Full proof</span><h3>Correctness &amp; Query Analysis</h3><p>Derive the coset state, prove the exact output distribution, establish the rank tail bound, and conclude end-to-end correctness.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="lower-bound.html"><span class="lesson-number">07</span><span class="lesson-meta">35–40 min · Lower-bound proof</span><h3>Classical Randomized Lower Bound</h3><p>Formalize the collision-free posterior, prove the adaptive transcript bound, apply Yao’s principle, and match it with an upper bound.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="implications.html"><span class="lesson-number">08</span><span class="lesson-meta">20–25 min · Capstone</span><h3>Implications &amp; Limitations</h3><p>Place the result inside BQP, relativization, hidden subgroups, and the broader landscape of CS455.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="circuits.html"><span class="lesson-number">03</span><span class="lesson-meta">20–25 min · Circuit model</span><h3>Quantum Circuits &amp; Oracles</h3><p>Turn the state-vector formalism into an algorithmic model by composing local gates and embedding an arbitrary classical function into a reversible quantum oracle.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="problem.html"><span class="lesson-number">04</span><span class="lesson-meta">18–22 min · Promise structure</span><h3>Simon’s Problem</h3><p>Read the hidden-XOR promise algebraically: the fibers of the oracle are precisely the cosets of the two-element subgroup {0,s}.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="algorithm.html"><span class="lesson-number">05</span><span class="lesson-meta">25–30 min · Quantum algorithm</span><h3>Simon’s Algorithm</h3><p>Follow the state transformations and see why interference converts translation symmetry into linear equations orthogonal to the hidden shift.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="correctness.html"><span class="lesson-number">06</span><span class="lesson-meta">35–40 min · Full proof</span><h3>Correctness &amp; Query Analysis</h3><p>Prove the exact sampling distribution, show that random equations reach full rank with high probability, and conclude end-to-end correctness.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="lower-bound.html"><span class="lesson-number">07</span><span class="lesson-meta">35–40 min · Lower-bound proof</span><h3>Classical Randomized Lower Bound</h3><p>Ask what a collision-free classical transcript can reveal, bound adaptive algorithms under a hard distribution, and finish with Yao’s principle.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="implications.html"><span class="lesson-number">08</span><span class="lesson-meta">20–25 min · Capstone</span><h3>Implications &amp; Limitations</h3><p>Place the separation in its proper setting: BQP, relativization, hidden subgroups, and the broader landscape of 15-455.</p><span class="card-link">Read lesson</span></a>
     </section>
   </main>
 
