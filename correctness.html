@@ -4,7 +4,7 @@
 <body>
   <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>15-455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a class="active" href="correctness.html" aria-current="page">06 · Proof</a><a href="lower-bound.html">07</a><a href="implications.html">08</a></nav></header>
   <main class="reading-shell">
-    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#distribution">Why each equation is valid</a></li><li><a href="#rank">When equations determine s</a></li><li><a href="#error">Why O(n) samples suffice</a></li><li><a href="#complexity">Final accounting</a></li><li><a href="#rank-lab-section">Rank laboratory</a></li><li><a href="#subtlety">Common questions</a></li></ol></aside>
+    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#distribution">Why each equation is valid</a></li><li><a href="#rank">When equations determine s</a></li><li><a href="#error">Why O(n) samples suffice</a></li><li><a href="#complexity">Final accounting</a></li><li><a href="#subtlety">Common questions</a></li></ol></aside>
     <article class="lesson-content">
       <header class="chapter-header"><p class="chapter-kicker">Chapter 06</p><h1>Why the Algorithm<br>Works</h1><p class="chapter-summary">The proof has two main ideas: interference guarantees that every measured equation is correct, and ordinary binary linear algebra shows that enough independent equations determine the secret.</p><div class="chapter-meta"><span>25–30 minute read</span></div></header>
 
@@ -66,20 +66,8 @@
         <p>We can therefore state the result at the appropriate level of strength. The query complexity is linear and every additional operation is polynomial in the ideal circuit model. This is a genuine complexity-theoretic separation in oracle access, but it is not by itself a claim about wall-clock performance on physical hardware.</p>
       </section>
 
-      <section id="rank-lab-section">
-        <h2>5. Build the equation system yourself</h2>
-        <div class="interactive" id="rank-lab" aria-labelledby="rank-title">
-          <div class="interactive-header"><h3 id="rank-title">GF(2) rank laboratory</h3><span class="interactive-tag">Hidden s = 1011</span></div>
-          <p>Each click samples a uniform z satisfying z · s = 0. Dependent rows are valid but do not shrink the candidate set.</p>
-          <div class="lab-buttons"><button type="button" id="sample-equation">Sample equation</button><button type="button" id="reset-equations">Reset</button></div>
-          <p><strong>Current rank:</strong> <span id="rank-value"></span></p><div class="rank-meter" aria-hidden="true"><span id="rank-bar"></span></div>
-          <div class="equation-list" id="rank-rows"></div>
-          <div class="output-panel"><p id="rank-candidate" aria-live="polite"></p></div>
-        </div>
-      </section>
-
       <section id="subtlety">
-        <h2>6. Common questions about the proof</h2>
+        <h2>5. Common questions about the proof</h2>
         <ul>
           <li><strong>Zero is a valid sample.</strong> It gives the tautology 0·s=0 and adds no rank.</li>
           <li><strong>Samples are uniform only under the exact promise.</strong> Noise or extra collisions change the state and its Fourier spectrum.</li>
@@ -88,7 +76,6 @@
           <li><strong>Conditioning is legitimate.</strong> We condition on a second-register outcome only to analyze the first register. Corollary 3 shows that omitting that measurement gives the same final z distribution.</li>
           <li><strong>Uniformity is stronger than orthogonality.</strong> Showing z·s=0 proves support; the equal squared amplitudes prove that no valid equation is favored.</li>
         </ul>
-        <div class="note-box"><p class="note-title">Proof architecture</p><p><strong>Promise</strong> gives two-element cosets. <strong>Measurement</strong> isolates a normalized coset state. <strong>Hadamard interference</strong> makes its Fourier support exactly s⊥. <strong>Random linear algebra</strong> spans s⊥ after O(n) rounds. <strong>Rank–nullity</strong> leaves span{s} as the only possible nullspace.</p></div>
       </section>
 
       <nav class="lesson-nav" aria-label="Lesson navigation"><a href="algorithm.html"><small>Previous chapter</small>Simon’s Algorithm</a><a href="lower-bound.html"><small>Next chapter</small>Classical Lower Bound</a></nav>

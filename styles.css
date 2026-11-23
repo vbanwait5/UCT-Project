@@ -192,12 +192,6 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .circuit-gate { min-width: 58px; min-height: 45px; display: grid; place-items: center; border: 2px solid var(--maroon); color: var(--maroon); background: white; font-family: var(--sans); font-weight: 800; }
 .circuit-gate.oracle { color: white; background: var(--maroon); }
 
-.equation-list { margin: 16px 0; display: grid; gap: 7px; }
-.equation-row { padding: 9px 11px; border: 1px solid #b9c7cd; background: white; display: flex; justify-content: space-between; gap: 15px; font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 14px; }
-.equation-row.dependent { color: var(--muted); background: #f2f0ec; }
-.rank-meter { height: 12px; margin: 12px 0; border: 1px solid #9baeb7; background: white; }
-.rank-meter span { display: block; height: 100%; width: 0; background: var(--blue); transition: width .2s ease; }
-
 .chart { margin-top: 20px; display: grid; gap: 14px; }
 .chart-row { display: grid; grid-template-columns: 130px minmax(0,1fr) 75px; align-items: center; gap: 10px; font-family: var(--sans); font-size: 14px; }
 .chart-track { height: 20px; border: 1px solid rgba(36,90,115,.2); background: white; }
