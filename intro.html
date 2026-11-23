@@ -103,20 +103,7 @@
         </div>
 
         <h3>Classical and quantum access</h3>
-        <p>A classical query selects a string <em>x</em> and returns <em>f</em>(<em>x</em>). A quantum operation must be linear and reversible, so the map |<em>x</em>⟩ ↦ |<em>f</em>(<em>x</em>)⟩ is not a valid oracle for an arbitrary <em>f</em>. The standard quantum oracle instead acts on an <em>n</em>-qubit input register and an <em>m</em>-qubit target register:</p>
-        <div class="math" role="img" aria-label="U sub f maps ket x ket y to ket x ket y exclusive-or f of x">
-          U<span class="sub">f</span> |x⟩|y⟩ = |x⟩|y ⊕ f(x)⟩.
-        </div>
-        <p>Here ⊕ denotes bitwise XOR. The map is unitary because it permutes computational-basis states, and it is its own inverse. By linearity, for amplitudes {α<span class="sub">x,y</span>} it satisfies</p>
-        <div class="math">U<span class="sub">f</span> ∑<span class="sub">x,y</span> α<span class="sub">x,y</span>|x⟩|y⟩ = ∑<span class="sub">x,y</span> α<span class="sub">x,y</span>|x⟩|y ⊕ f(x)⟩.</div>
-        <p>This entire transformation counts as one query. A <em>T</em>-query quantum algorithm therefore has the form</p>
-        <div class="math">U<span class="sub">T</span> U<span class="sub">f</span> U<span class="sub">T−1</span> ··· U<span class="sub">1</span> U<span class="sub">f</span> U<span class="sub">0</span>|0<sup>k</sup>⟩,</div>
-        <p>where the fixed unitaries <em>U</em><span class="sub">i</span> do not depend on <em>f</em>. A final measurement determines the output. The amplitudes may encode relations among many values of <em>f</em>, but measurement cannot reveal the entire truth table.</p>
-
-        <div class="note-box remark">
-          <p class="note-title">Important 5 <span>(No free exponential readout)</span></p>
-          <p>Querying a superposition does not produce a list of all values <em>f</em>(<em>x</em>). A measurement yields only one classical outcome. Quantum algorithms are powerful when interference converts hidden global structure into a likely measurement outcome.</p>
-        </div>
+        <p>A classical query chooses an input <em>x</em> and receives <em>f</em>(<em>x</em>). A quantum query provides coherent access to the same function, allowing later interference to reveal global structure. After introducing quantum states and gates, Chapter 3 will define this access precisely and explain why the oracle must be reversible.</p>
       </section>
 
       <section id="speedup">
@@ -138,7 +125,7 @@
       <section id="simon-preview">
         <h2>5. The road to Simon’s algorithm</h2>
         <div class="note-box">
-          <p class="note-title">Definition 6 <span>(Promise problem)</span></p>
+          <p class="note-title">Definition 5 <span>(Promise problem)</span></p>
           <p>A promise problem is a pair (<em>L</em><span class="sub">YES</span>, <em>L</em><span class="sub">NO</span>) of disjoint languages. An algorithm must accept every input in <em>L</em><span class="sub">YES</span> and reject every input in <em>L</em><span class="sub">NO</span>; its behavior outside <em>L</em><span class="sub">YES</span> ∪ <em>L</em><span class="sub">NO</span> is unrestricted. A search promise problem similarly requires a valid output only on promised inputs.</p>
         </div>
 
