@@ -35,17 +35,6 @@
         <ul><li>If <em>s</em>·<em>z</em>=1, then [1+(−1)] = 0, so destructive interference makes α<sub>z</sub>=0.</li><li>If <em>s</em>·<em>z</em>=0, then [1+1] = 2, so |α<sub>z</sub>|² = 4/(2N)=2/N=1/2<sup>n−1</sup>.</li></ul>
         <p>Exactly half of all strings satisfy <em>s</em>·<em>z</em>=0. To see this, choose a coordinate where <em>s</em> has a 1; flipping that bit of <em>z</em> toggles the dot product and pairs every valid string with one invalid string. Thus there are 2<sup>n−1</sup> surviving outcomes, each with probability 1/2<sup>n−1</sup>. The distribution is uniform on s<sup>⊥</sup>. ∎</p>
 
-        <div class="interactive" id="interference-proof-lab" aria-labelledby="interference-proof-title">
-          <div class="interactive-header"><h3 id="interference-proof-title">Two-path interference calculator</h3><span class="interactive-tag">n = 3, x₀ = 011</span></div>
-          <p>Choose a hidden shift s and a possible measurement z. The two numbers below are the unnormalized phase contributions from |x₀⟩ and |x₀⊕s⟩.</p>
-          <div class="control-grid">
-            <div class="control-group"><label for="proof-s">Hidden shift s</label><select id="proof-s"><option>001</option><option>010</option><option>011</option><option>100</option><option selected>101</option><option>110</option><option>111</option></select></div>
-            <div class="control-group"><label for="proof-z">Candidate outcome z</label><select id="proof-z"><option>000</option><option>001</option><option>010</option><option>011</option><option>100</option><option>101</option><option>110</option><option>111</option></select></div>
-          </div>
-          <div class="output-panel"><p><strong>Orthogonality test:</strong> s · z = <span id="proof-dot" class="binary"></span></p><p class="math" id="proof-contributions"></p><p id="proof-verdict" aria-live="polite"></p></div>
-          <p class="interactive-caption">The common normalization factor is 1/√(2N). Only the displayed numerator determines whether the outcome survives.</p>
-        </div>
-
       </section>
 
       <section id="rank">
