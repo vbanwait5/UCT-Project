@@ -24,7 +24,7 @@
       <div class="hero-copy">
         <p class="eyebrow">A short course in quantum query complexity</p>
         <h1>Simon’s Algorithm<br><em>&amp; Quantum Speedups</em></h1>
-        <p class="lede">How can a quantum algorithm recover a hidden pattern while making exponentially fewer queries than any classical randomized algorithm? To answer that question carefully, we will build the model from first principles, derive the algorithm one state at a time, and prove both sides of the separation.</p>
+        <p class="lede">How can a quantum algorithm recover a hidden pattern with exponentially fewer queries? This course answers that question from scratch, using only the quantum ideas and binary linear algebra that Simon’s algorithm actually needs.</p>
         <div class="hero-actions">
           <a class="button primary" href="intro.html">Begin with the introduction</a>
           <a class="text-link" href="#course-map">View course map</a>
@@ -54,7 +54,7 @@
         <p class="section-number">Course map</p>
         <h2>An eight-chapter path</h2>
       </div>
-      <p>The chapters form one continuous argument. We first define the mathematical and computational model, then isolate Simon’s hidden-XOR structure, derive the quantum algorithm, and finally prove why bounded-error classical algorithms cannot match its query complexity.</p>
+      <p>The chapters form one continuous argument. Concrete examples come first; general notation appears only when the proof needs it. Optional technical details are expandable, so the central idea remains visible.</p>
     </section>
 
     <section class="lesson-grid full" aria-label="Course lessons">
@@ -67,17 +67,17 @@
       </a>
       <a class="lesson-card available" href="basics.html">
         <span class="lesson-number">02</span>
-        <span class="lesson-meta">25–30 min · Mathematical foundations</span>
+        <span class="lesson-meta">18–22 min · Essential foundations</span>
         <h3>Quantum Computing Basics</h3>
-        <p>Develop the mathematics behind the model: amplitudes and measurement, relative phase and interference, tensor products and entanglement, and the gates used in the algorithm.</p>
+        <p>Learn only the required toolkit: amplitudes, measurement, interference, multi-qubit registers, and the Hadamard gate.</p>
         <span class="card-link">Read lesson</span>
       </a>
-      <a class="lesson-card available" href="circuits.html"><span class="lesson-number">03</span><span class="lesson-meta">20–25 min · Circuit model</span><h3>Quantum Circuits &amp; Oracles</h3><p>Turn the state-vector formalism into an algorithmic model by composing local gates and embedding an arbitrary classical function into a reversible quantum oracle.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="problem.html"><span class="lesson-number">04</span><span class="lesson-meta">18–22 min · Promise structure</span><h3>Simon’s Problem</h3><p>Read the hidden-XOR promise algebraically: the fibers of the oracle are precisely the cosets of the two-element subgroup {0,s}.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="circuits.html"><span class="lesson-number">03</span><span class="lesson-meta">12–15 min · Circuit model</span><h3>Quantum Circuits &amp; Oracles</h3><p>See why quantum operations must be reversible and how an ordinary function becomes a coherent XOR oracle.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="problem.html"><span class="lesson-number">04</span><span class="lesson-meta">12–15 min · Promise structure</span><h3>Simon’s Problem</h3><p>Use three-bit examples to understand the hidden XOR pairs before introducing the formal promise.</p><span class="card-link">Read lesson</span></a>
       <a class="lesson-card available" href="algorithm.html"><span class="lesson-number">05</span><span class="lesson-meta">25–30 min · Quantum algorithm</span><h3>Simon’s Algorithm</h3><p>Follow the state transformations and see why interference converts translation symmetry into linear equations orthogonal to the hidden shift.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="correctness.html"><span class="lesson-number">06</span><span class="lesson-meta">35–40 min · Full proof</span><h3>Correctness &amp; Query Analysis</h3><p>Prove the exact sampling distribution, show that random equations reach full rank with high probability, and conclude end-to-end correctness.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="lower-bound.html"><span class="lesson-number">07</span><span class="lesson-meta">35–40 min · Lower-bound proof</span><h3>Classical Randomized Lower Bound</h3><p>Ask what a collision-free classical transcript can reveal, bound adaptive algorithms under a hard distribution, and finish with Yao’s principle.</p><span class="card-link">Read lesson</span></a>
-      <a class="lesson-card available" href="implications.html"><span class="lesson-number">08</span><span class="lesson-meta">20–25 min · Capstone</span><h3>Implications &amp; Limitations</h3><p>Place the separation in its proper setting: BQP, relativization, hidden subgroups, and the broader landscape of 15-455.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="correctness.html"><span class="lesson-number">06</span><span class="lesson-meta">25–30 min · Core proof</span><h3>Why the Algorithm Works</h3><p>Prove the interference rule first, then use binary Gaussian elimination to recover the secret.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="lower-bound.html"><span class="lesson-number">07</span><span class="lesson-meta">20–25 min · Lower bound</span><h3>Why Classical Algorithms Need Exponentially Many Queries</h3><p>Reduce the classical difficulty to one familiar idea: a collision appears only at the birthday scale.</p><span class="card-link">Read lesson</span></a>
+      <a class="lesson-card available" href="implications.html"><span class="lesson-number">08</span><span class="lesson-meta">10–12 min · Capstone</span><h3>What the Result Actually Means</h3><p>State the exponential separation precisely and separate it from claims the proof does not establish.</p><span class="card-link">Read lesson</span></a>
     </section>
   </main>
 
