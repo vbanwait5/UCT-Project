@@ -163,8 +163,8 @@ input[type="range"] { width: 100%; accent-color: var(--maroon); }
 .probability-track { height: 18px; background: white; border: 1px solid rgba(36,90,115,.2); }
 .probability-fill { height: 100%; background: var(--blue); transition: width .25s ease; }
 .lab-buttons { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
-.lab-buttons button, .quiz button, .step-controls button { padding: 8px 12px; border: 1px solid var(--blue); color: var(--blue); background: white; cursor: pointer; font-family: var(--sans); font-size: 14px; font-weight: 700; }
-.lab-buttons button:hover, .quiz button:hover, .step-controls button:hover { color: white; background: var(--blue); }
+.lab-buttons button, .quiz button { padding: 8px 12px; border: 1px solid var(--blue); color: var(--blue); background: white; cursor: pointer; font-family: var(--sans); font-size: 14px; font-weight: 700; }
+.lab-buttons button:hover, .quiz button:hover { color: white; background: var(--blue); }
 .measurement { min-height: 25px; grid-column: 1 / -1; margin: 0 !important; color: var(--blue); font-family: var(--sans); font-size: 12px; font-weight: 700; }
 
 /* Interactive learning components */
@@ -191,15 +191,6 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .circuit-wire { height: 2px; background: #5d5954; }
 .circuit-gate { min-width: 58px; min-height: 45px; display: grid; place-items: center; border: 2px solid var(--maroon); color: var(--maroon); background: white; font-family: var(--sans); font-weight: 800; }
 .circuit-gate.oracle { color: white; background: var(--maroon); }
-
-.stepper-layout { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 20px; }
-.step-list { margin: 0; padding: 0; list-style: none; }
-.step-list button { width: 100%; padding: 10px; border: 0; border-bottom: 1px solid #b9c7cd; color: #4d656f; background: transparent; text-align: left; cursor: pointer; font-family: var(--sans); font-size: 14px; }
-.step-list button.active { color: white; background: var(--blue); }
-.step-panel { min-height: 270px; padding: 20px; border: 1px solid #b9c7cd; background: white; }
-.step-panel h4 { margin: 0 0 10px; color: var(--blue); font-size: 19px; }
-.step-panel .math { margin: 18px 0; font-size: 18px; }
-.step-controls { margin-top: 15px; display: flex; justify-content: space-between; gap: 10px; }
 
 .equation-list { margin: 16px 0; display: grid; gap: 7px; }
 .equation-row { padding: 9px 11px; border: 1px solid #b9c7cd; background: white; display: flex; justify-content: space-between; gap: 15px; font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 14px; }
@@ -250,9 +241,6 @@ details.quiz summary { padding: 13px 0; cursor: pointer; color: var(--maroon); f
   .toc { position: static; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
   .toc ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
   .chapter-meta { flex-wrap: wrap; gap: 8px 20px; }
-  .stepper-layout { grid-template-columns: 1fr; }
-  .step-list { display: grid; grid-template-columns: repeat(3, 1fr); }
-  .step-list button { text-align: center; border: 1px solid #b9c7cd; }
 }
 @media (max-width: 520px) {
   .hero h1 { font-size: 44px; }
@@ -268,7 +256,6 @@ details.quiz summary { padding: 13px 0; cursor: pointer; color: var(--maroon); f
   .control-grid, .pair-grid, .claim-grid, .connection-grid { grid-template-columns: 1fr; }
   .chart-row { grid-template-columns: 1fr; }
   .chart-value { text-align: left; }
-  .step-list { grid-template-columns: 1fr 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

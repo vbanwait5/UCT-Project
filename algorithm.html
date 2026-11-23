@@ -9,7 +9,7 @@
   <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>15-455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a class="active" href="algorithm.html" aria-current="page">05 · Algorithm</a><a href="correctness.html">06</a><a href="lower-bound.html">07</a><a href="implications.html">08</a></nav></header>
 
   <main class="reading-shell">
-    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#overview">Algorithm overview</a></li><li><a href="#prepare">Prepare and query</a></li><li><a href="#coset-state">The coset state</a></li><li><a href="#interfere">Hadamard interference</a></li><li><a href="#repeat">Repeat and solve</a></li><li><a href="#stepper">Walk through it</a></li></ol></aside>
+    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#overview">Algorithm overview</a></li><li><a href="#prepare">Prepare and query</a></li><li><a href="#coset-state">The coset state</a></li><li><a href="#interfere">Hadamard interference</a></li><li><a href="#repeat">Repeat and solve</a></li></ol></aside>
 
     <article class="lesson-content">
       <header class="chapter-header"><p class="chapter-kicker">Chapter 05</p><h1>Simon’s Algorithm</h1><p class="chapter-summary">The algorithm never tries to read all oracle values. It prepares a coherent superposition of one hidden pair and uses Hadamard interference to turn that pair’s translation symmetry into a linear constraint.</p><div class="chapter-meta"><span>25–30 minute read</span></div></header>
@@ -61,18 +61,6 @@
         <div class="math">Zs = 0 &nbsp; over 𝔽<span class="sub">2</span>.</div>
         <p>Once rank(<em>Z</em>) = <em>n</em>−1, its nullspace has dimension one. Since the true <em>s</em> lies in the nullspace, the only nonzero solution is <em>s</em>. Gaussian elimination uses XOR in place of subtraction.</p>
         <div class="note-box connection"><p class="note-title">Connection: randomized computation</p><p>The quantum circuit is randomized only at measurement. Correctness is one-sided at the equation level: a sampled row never violates z · s = 0. Failure occurs because the rows may be linearly dependent, and repetition reduces that failure probability exponentially.</p></div>
-      </section>
-
-      <section id="stepper">
-        <h2>6. Walk through the state changes</h2>
-        <div class="interactive" id="algorithm-stepper" aria-labelledby="stepper-title">
-          <div class="interactive-header"><h3 id="stepper-title">Algorithm state stepper</h3><span class="interactive-tag">Example s = 101</span></div>
-          <div class="stepper-layout">
-            <ol class="step-list"><li><button type="button" data-algorithm-step>Initialize</button></li><li><button type="button" data-algorithm-step>Hadamards</button></li><li><button type="button" data-algorithm-step>Oracle</button></li><li><button type="button" data-algorithm-step>Coset</button></li><li><button type="button" data-algorithm-step>Interfere</button></li><li><button type="button" data-algorithm-step>Measure</button></li></ol>
-            <div class="step-panel"><h4 id="algorithm-step-title"></h4><div class="math" id="algorithm-step-formula"></div><p id="algorithm-step-copy"></p><div class="step-controls"><button type="button" id="step-back">Previous</button><button type="button" id="step-next">Next</button></div></div>
-          </div>
-        </div>
-        <div class="note-box"><p class="note-title">Takeaway</p><p>The oracle creates a two-point periodic state; the Hadamard transform maps translation symmetry in the primal space to orthogonality constraints in the dual space. The algorithm learns s indirectly by sampling s⊥.</p></div>
       </section>
 
       <nav class="lesson-nav" aria-label="Lesson navigation"><a href="problem.html"><small>Previous chapter</small>Simon’s Problem</a><a href="correctness.html"><small>Next chapter</small>Correctness &amp; Analysis</a></nav>
