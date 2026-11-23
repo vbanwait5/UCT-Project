@@ -19,7 +19,7 @@
     <aside class="toc" aria-label="On this page">
       <p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
       <p class="toc-label">On this page</p>
-      <ol><li><a href="#circuit-model">Circuit model</a></li><li><a href="#reversibility">Reversibility</a></li><li><a href="#oracle">Quantum oracles</a></li><li><a href="#kickback">Phase kickback</a></li><li><a href="#accounting">Resource accounting</a></li><li><a href="#connections">15-455 connections</a></li></ol>
+      <ol><li><a href="#circuit-model">Circuit model</a></li><li><a href="#reversibility">Reversibility</a></li><li><a href="#oracle">Quantum oracles</a></li><li><a href="#kickback">Phase kickback</a></li><li><a href="#accounting">Resource accounting</a></li></ol>
     </aside>
 
     <article class="lesson-content">
@@ -94,13 +94,6 @@
           <tr><td>Space</td><td>Qubits simultaneously present</td><td>Time and reused qubits</td></tr>
         </tbody></table>
         <p>These measures answer different questions, and they should not be conflated. A query upper bound becomes a runtime upper bound only after the oracle has been implemented by a circuit and all remaining quantum and classical work has been counted. Simon’s separation deliberately isolates black-box information access; later chapters will state that boundary explicitly whenever the result is interpreted.</p>
-      </section>
-
-      <section id="connections">
-        <h2>6. Connections to 15-455</h2>
-        <div class="note-box connection"><p class="note-title">Boolean circuits</p><p>Uniform quantum circuits mirror the uniform circuit families used in classical complexity, but every internal quantum gate is unitary. Fan-out and erasure are not primitive quantum operations; information must be moved reversibly.</p></div>
-        <div class="note-box connection"><p class="note-title">Space complexity</p><p>Ancilla qubits play the role of work tape. They may be reused only after being returned to a known state—often by running a computation backward, a technique called uncomputation.</p></div>
-        <div class="note-box connection"><p class="note-title">Relativization</p><p>An oracle gate makes “computation relative to f” concrete. Later, the Simon separation will become evidence about BQP<sup>A</sup> versus BPP<sup>A</sup> for a suitable oracle A, not an unconditional separation of BQP and BPP.</p></div>
       </section>
 
       <nav class="lesson-nav" aria-label="Lesson navigation"><a href="basics.html"><small>Previous chapter</small>Quantum Computing Basics</a><a href="problem.html"><small>Next chapter</small>Simon’s Problem</a></nav>
