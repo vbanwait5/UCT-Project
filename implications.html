@@ -4,7 +4,7 @@
 <body>
   <header class="site-header"><a class="brand" href="index.html" aria-label="Quantum Speedups home"><span class="brand-mark" aria-hidden="true">|ψ⟩</span><span><strong>Quantum Speedups</strong><small>15-455 · UCT Project</small></span></a><nav class="site-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a href="intro.html">01</a><a href="basics.html">02</a><a href="circuits.html">03</a><a href="problem.html">04</a><a href="algorithm.html">05</a><a href="correctness.html">06</a><a href="lower-bound.html">07</a><a class="active" href="implications.html" aria-current="page">08 · Limits</a></nav></header>
   <main class="reading-shell">
-    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#proved">What was proved</a></li><li><a href="#bqp">Relation to BQP</a></li><li><a href="#relativization">Oracle evidence</a></li><li><a href="#hsp">The larger pattern</a></li><li><a href="#limits">What it does not show</a></li><li><a href="#claims">Check the claims</a></li><li><a href="#sources">Sources</a></li></ol></aside>
+    <aside class="toc" aria-label="On this page"><p class="toc-label">Reading progress</p><div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div><p class="toc-label">On this page</p><ol><li><a href="#proved">What was proved</a></li><li><a href="#bqp">Relation to BQP</a></li><li><a href="#relativization">Oracle evidence</a></li><li><a href="#hsp">The larger pattern</a></li><li><a href="#limits">What it does not show</a></li><li><a href="#claims">Check the claims</a></li></ol></aside>
     <article class="lesson-content">
       <header class="chapter-header"><p class="chapter-kicker">Chapter 08</p><h1>What the Result<br>Actually Means</h1><p class="chapter-summary">We proved an exponential query separation. This final chapter explains that statement’s scope without adding another layer of technical machinery.</p><div class="chapter-meta"><span>Capstone</span><span>10–12 minute read</span><span>Includes claim checker</span></div></header>
 
@@ -61,18 +61,11 @@
         </div>
       </section>
 
-      <section id="sources">
-        <h2>7. Primary sources</h2>
-        <ul class="source-list">
-          <li>Daniel R. Simon, <a href="https://epubs.siam.org/doi/10.1137/S0097539796298637">“On the Power of Quantum Computation”</a>, <em>SIAM Journal on Computing</em> 26(5), 1997.</li>
-          <li>Ethan Bernstein and Umesh Vazirani, <a href="https://people.eecs.berkeley.edu/~vazirani/pubs/bv.pdf">“Quantum Complexity Theory”</a>, <em>SIAM Journal on Computing</em> 26(5), 1997.</li>
-        </ul>
-        <div class="note-box"><p class="note-title">Final takeaway</p><p>Simon’s algorithm is valuable as a complete complexity-theoretic case study. It begins by fixing a model and a resource, exploits algebraic structure to design an algorithm, proves the exact output distribution and its amplification, and then matches the upper bound with a lower bound in the competing model. The proof is compelling precisely because its conclusion is both strong and carefully delimited.</p></div>
-      </section>
+      <div class="note-box"><p class="note-title">Final takeaway</p><p>Simon’s algorithm is valuable as a complete complexity-theoretic case study. It fixes a model and resource, exploits algebraic structure, proves the output distribution, and matches the quantum algorithm with a classical lower bound.</p></div>
 
-      <nav class="lesson-nav" aria-label="Lesson navigation"><a href="lower-bound.html"><small>Previous chapter</small>Classical Lower Bound</a><a href="index.html"><small>Course complete</small>Return to overview</a></nav>
+      <nav class="lesson-nav" aria-label="Lesson navigation"><a href="lower-bound.html"><small>Previous chapter</small>Classical Lower Bound</a><a href="sources.html"><small>Course complete</small>Sources &amp; References</a></nav>
     </article>
   </main>
-  <footer class="site-footer"><p><strong>Simon’s Algorithm &amp; Quantum Speedups</strong><br>15-455 Undergraduate Complexity Theory</p><p>Chapter 08 · Implications</p></footer><script src="lesson.js"></script>
+  <footer class="site-footer"><p><strong>Simon’s Algorithm &amp; Quantum Speedups</strong><br>15-455 Undergraduate Complexity Theory</p><p>Chapter 08 · Implications<br><a class="footer-link" href="sources.html">Sources &amp; references</a></p></footer><script src="lesson.js"></script>
 </body>
 </html>
