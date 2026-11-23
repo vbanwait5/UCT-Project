@@ -196,11 +196,3 @@ if (birthdayLab) {
   runButton.addEventListener('click', () => renderBirthdayLab(true));
   renderBirthdayLab(false);
 }
-
-document.querySelectorAll('.claim-card button').forEach(button => {
-  button.addEventListener('click', () => {
-    const card = button.closest('.claim-card');
-    card.classList.toggle('revealed');
-    button.textContent = card.classList.contains('revealed') ? 'Hide analysis' : 'Check claim';
-  });
-});

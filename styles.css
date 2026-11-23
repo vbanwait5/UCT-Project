@@ -199,13 +199,6 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .chart-fill.bound { background: var(--maroon); }
 .chart-value { text-align: right; font-variant-numeric: tabular-nums; font-weight: 750; }
 
-.claim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.claim-card { min-height: 155px; padding: 16px; border: 1px solid #b9c7cd; background: white; }
-.claim-card p { margin-bottom: 12px; }
-.claim-card button { padding: 7px 10px; border: 1px solid var(--blue); color: var(--blue); background: white; cursor: pointer; font-family: var(--sans); font-size: 14px; font-weight: 750; }
-.claim-result { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--blue); font-family: var(--sans); font-size: 13px; }
-.claim-card.revealed .claim-result { display: block; }
-
 .connection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .connection-card { padding: 18px; border: 1px solid var(--line); background: rgba(255,255,255,.55); }
 .connection-card h3 { margin: 0 0 8px; color: var(--maroon); font-size: 18px; }
@@ -247,7 +240,7 @@ details.quiz summary { padding: 13px 0; cursor: pointer; color: var(--maroon); f
   .lab-buttons, .measurement { grid-column: auto; }
   .race-row { grid-template-columns: 68px 1fr; }
   .race-value { grid-column: 2; }
-  .control-grid, .pair-grid, .claim-grid, .connection-grid { grid-template-columns: 1fr; }
+  .control-grid, .pair-grid, .connection-grid { grid-template-columns: 1fr; }
   .chart-row { grid-template-columns: 1fr; }
   .chart-value { text-align: left; }
 }
