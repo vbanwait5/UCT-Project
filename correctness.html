@@ -73,7 +73,7 @@
           <li><strong>Samples are uniform only under the exact promise.</strong> Noise or extra collisions change the state and its Fourier spectrum.</li>
           <li><strong>Rank n−1 is the stopping condition.</strong> Rank n is impossible because every row lies in s⊥.</li>
           <li><strong>Full rank already certifies correctness.</strong> Under the promise, no extra oracle query is required once rank is n−1. If one tries a candidate earlier, two queries can test whether f(0)=f(s′).</li>
-          <li><strong>Conditioning is legitimate.</strong> We condition on a second-register outcome only to analyze the first register. Corollary 3 shows that omitting that measurement gives the same final z distribution.</li>
+          <li><strong>Conditioning is legitimate.</strong> We condition on a second-register outcome only to analyze the first register. If that register is discarded instead, the first register is a mixture of coset states; because Lemma 2 gives the same uniform distribution on s⊥ for every coset, the final z distribution is unchanged.</li>
           <li><strong>Uniformity is stronger than orthogonality.</strong> Showing z·s=0 proves support; the equal squared amplitudes prove that no valid equation is favored.</li>
         </ul>
       </section>

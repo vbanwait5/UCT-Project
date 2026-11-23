@@ -31,7 +31,9 @@
 
         <div class="note-box"><p class="note-title">Collision bound</p><p>For every deterministic adaptive <em>q</em>-query algorithm under this random choice of oracle,</p><div class="math">Pr[collision] ≤ q(q−1)/[2(N−1)].</div></div>
         <p><strong>Why the bound holds.</strong> Imagine following the algorithm while supplying a new label after every query. Because the algorithm is deterministic, those labels determine its entire collision-free query set Q. A real collision can occur only when the random secret s equals one of the at most q(q−1)/2 differences in D(Q). Since s is uniform among N−1 nonzero strings, the displayed probability follows. Notice that the argument still allows each new query to depend on every earlier answer.</p>
-        <p>If q is much smaller than √N, then q²/N is small, so a collision is unlikely. Without a collision, the algorithm has eliminated at most q(q−1)/2 of the N−1 possible secrets and can do little better than guess. Constant success therefore requires</p>
+        <p>It remains to account for the possibility that the algorithm guesses the secret without seeing a collision. Condition on a collision-free transcript and its resulting query set Q. The hidden shift is then uniform over the nonzero strings outside D(Q), so at least M−C candidates remain and any fixed output is correct with probability at most 1/(M−C). Therefore</p>
+        <div class="math">Pr[success] ≤ C/M + 1/(M−C), &nbsp;&nbsp; where C = q(q−1)/2.</div>
+        <p>For example, if q≤√M/2, then C/M≤1/8, while 1/(M−C) tends to zero as M grows. Thus the success probability is bounded below 2/3 for all sufficiently large n. Adjusting the constant handles the finitely many smaller values of n, so constant success requires</p>
         <div class="math">q = Ω(√N) = Ω(2<sup>n/2</sup>).</div>
       </section>
 

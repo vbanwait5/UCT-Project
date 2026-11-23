@@ -58,7 +58,7 @@
         <h2>5. Search, decision, and verification</h2>
         <p>It is worth being precise about the type of computational task. Simon’s problem is a search problem: the required output is the <em>n</em>-bit string <em>s</em>. Given a candidate shift, one may test f(<em>x</em>) = f(<em>x</em> ⊕ <em>s</em>) on sampled inputs, but verifying that identity on the entire black-box domain would itself require many queries.</p>
         <p>A related decision version asks whether <em>f</em> is one-to-one or satisfies the two-to-one Simon promise. The search and decision versions are closely related but not definitionally identical. When making a complexity claim, we must say which version and which input promise we mean.</p>
-        <div class="note-box connection"><p class="note-title">Connection: reductions and completeness</p><p>Reductions between promise problems must map promised yes/no instances to promised instances. A reduction that sends valid inputs outside the target promise does not establish correctness. Simon’s problem is an important algorithmic primitive, but it is not known to be complete for BQP (the bounded-error quantum analogue of BPP).</p></div>
+        <div class="note-box connection"><p class="note-title">Connection: reductions and completeness</p><p>Reductions between promise problems must map promised yes/no instances to promised instances. A reduction that sends valid inputs outside the target promise does not establish correctness. This discussion does not make a BQP-completeness claim: Simon’s task is a search problem, whereas BQP (the bounded-error quantum analogue of BPP) is defined as a class of decision problems.</p></div>
       </section>
 
       <section id="information">
